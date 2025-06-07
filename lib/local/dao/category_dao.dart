@@ -1,0 +1,20 @@
+
+import 'package:floor/floor.dart';
+import 'package:hour/local/entity/category_entity.dart';
+
+@dao
+abstract class CategoryDao {
+  @Query('SELECT * FROM $_tableName WHERE id = :id')
+  Future<CategoryEntity?> findOutEntityById(int id);
+
+  @Query('SELECT * FROM $_tableName')
+  Future<List<CategoryEntity>> findAllEntities();
+
+  @Query('SELECT * FROM $_tableName')
+  Stream<List<CategoryEntity>> findAllEntitiesWithStream();
+
+  @Query("DELETE FROM note")
+  Future<void> deleteAllOutEntities();
+
+  static const String _tableName = "category";
+}

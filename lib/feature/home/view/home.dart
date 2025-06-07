@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hour/component/bottom_navigation_bar.dart';
 import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
-import 'package:hour/core/navigation/app_routes.dart';
 import 'package:hour/feature/home/widget/home_bottom_sheet.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -37,14 +34,41 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // return Consumer<HomeViewmodel>(builder:
+    //     (BuildContext context, HomeViewmodel viewModel, Widget? child) {
     return Scaffold(
+        // appBar: PreferredSize(
+        //   preferredSize: Size.fromHeight(60),
+        //   child: DefaultAppbar(
+        //     title: '이번 달 소비',
+        //     onPlusClick: () {
+        //       showModalBottomSheet(
+        //         context: context,
+        //         builder: (context) {
+        //           return ChangeNotifierProvider.value(
+        //             value: viewModel,
+        //             child: Consumer<HomeViewmodel>(
+        //               builder: (
+        //                   BuildContext context,
+        //                   HomeViewmodel value,
+        //                   Widget? child,
+        //                   ) {
+        //                 return HomeBottomSheet(context, viewModel);
+        //               },
+        //             ),
+        //           );
+        //         },
+        //       );
+        //     },
+        //   ),
+        // ),
+
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ListView(
             children: [
-              // Title Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

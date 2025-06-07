@@ -13,8 +13,6 @@ class AnalyticScreen extends StatefulWidget {
 }
 
 class _AnalyticScreenState extends State<AnalyticScreen> {
-  final TextEditingController _reasonTextFieldController =
-  TextEditingController();
 
   final dummyData = [
     {'value': 60.0, 'color': HourColors.orange500},
