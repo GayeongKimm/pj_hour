@@ -74,6 +74,8 @@ class _$HourDatabase extends HourDatabase {
 
   CategoryDao? _categoryDaoInstance;
 
+  HistoryDao? _historyInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -97,6 +99,8 @@ class _$HourDatabase extends HourDatabase {
       onCreate: (database, version) async {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `month` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `type` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `date` TEXT NOT NULL, FOREIGN KEY (`categoryId`) REFERENCES `category` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -107,6 +111,11 @@ class _$HourDatabase extends HourDatabase {
   @override
   CategoryDao get categoryDao {
     return _categoryDaoInstance ??= _$CategoryDao(database, changeListener);
+  }
+
+  @override
+  HistoryDao get history {
+    return _historyInstance ??= _$HistoryDao(database, changeListener);
   }
 }
 
@@ -152,6 +161,66 @@ class _$CategoryDao extends CategoryDao {
             amount: row['amount'] as int,
             date: _dateTimeConverter.decode(row['date'] as String)),
         queryableName: 'category',
+        isView: false);
+  }
+
+  @override
+  Future<void> deleteAllOutEntities() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM note');
+  }
+}
+
+class _$HistoryDao extends HistoryDao {
+  _$HistoryDao(
+    this.database,
+    this.changeListener,
+  ) : _queryAdapter = QueryAdapter(database, changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  @override
+  Future<HistoryEntity?> findOutEntityById(int id) async {
+    return _queryAdapter.query('SELECT * FROM history WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => HistoryEntity(
+            row['id'] as int?,
+            row['title'] as String,
+            row['content'] as String,
+            _historyTypeConverter.decode(row['type'] as String),
+            row['categoryId'] as int,
+            row['price'] as int,
+            _dateTimeConverter.decode(row['date'] as String)),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<HistoryEntity>> findAllEntities() async {
+    return _queryAdapter.queryList('SELECT * FROM history',
+        mapper: (Map<String, Object?> row) => HistoryEntity(
+            row['id'] as int?,
+            row['title'] as String,
+            row['content'] as String,
+            _historyTypeConverter.decode(row['type'] as String),
+            row['categoryId'] as int,
+            row['price'] as int,
+            _dateTimeConverter.decode(row['date'] as String)));
+  }
+
+  @override
+  Stream<List<HistoryEntity>> findAllEntitiesWithStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM history',
+        mapper: (Map<String, Object?> row) => HistoryEntity(
+            row['id'] as int?,
+            row['title'] as String,
+            row['content'] as String,
+            _historyTypeConverter.decode(row['type'] as String),
+            row['categoryId'] as int,
+            row['price'] as int,
+            _dateTimeConverter.decode(row['date'] as String)),
+        queryableName: 'history',
         isView: false);
   }
 

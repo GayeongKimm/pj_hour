@@ -7,9 +7,9 @@ abstract class DatabaseManager {
 
   static Future<HourDatabase> getDatabase() async {
     if (_database == null) {
-      // _database = await $FloorHourDatabase
-      //     .databaseBuilder('hour_database.db')
-      //     .build();
+      _database = await $FloorHourDatabase
+          .databaseBuilder('hour_database.db')
+          .build();
       ;
     }
     return _database!;
