@@ -88,7 +88,9 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                 const SizedBox(height: 12),
                 Text(
                   "소비 기록하기",
-                  style: HourStyles.title1.copyWith(color: HourColors.staticWhite),
+                  style: HourStyles.title1.copyWith(
+                      color: HourColors.staticWhite
+                  ),
                 ),
                 const SizedBox(height: 12),
                 ...viewModel.historyEntities.map((data) => HistoryItem(
@@ -110,6 +112,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                   labelText: "소비 이름",
                   hintText: "소비 이름을 입력해주세요.",
                   controller: _titleTextFieldController,
+
                 ),
                 const SizedBox(height: 12),
                 HourTextField(
@@ -121,7 +124,10 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    const Text("카테고리", style: TextStyle(color: HourColors.gray500)),
+                    const Text(
+                        "카테고리",
+                        style: TextStyle(color: HourColors.gray500)
+                    ),
                     const Spacer(),
                     Image.asset(
                       "assets/images/ic_down.png",

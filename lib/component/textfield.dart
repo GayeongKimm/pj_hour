@@ -10,6 +10,7 @@ class HourTextField extends StatefulWidget {
   final TextEditingController? controller;
   final bool obscureText;
   final TextInputType? keyboardType;
+  final Color? textColor;
 
   const HourTextField({
     super.key,
@@ -20,6 +21,7 @@ class HourTextField extends StatefulWidget {
     this.controller,
     this.obscureText = false,
     this.keyboardType,
+    this.textColor,
   });
 
   @override
@@ -65,7 +67,7 @@ class _HourTextFieldState extends State<HourTextField> {
               height: 1.2,
               color: _focusNode.hasFocus
                   ? HourColors.primary300
-                  : HourColors.gray700,
+                  : HourColors.staticWhite,
             ),
           ),
         ),
@@ -73,7 +75,10 @@ class _HourTextFieldState extends State<HourTextField> {
           child: TextFormField(
             focusNode: _focusNode,
             controller: _controller,
-            style: HourStyles.label1.copyWith(height: 1.3),
+            style: HourStyles.label1.copyWith(
+              height: 1.3,
+              color: widget.textColor ?? HourColors.staticWhite,
+            ),
             textAlignVertical: TextAlignVertical.center,
             cursorColor: HourColors.primary300,
             obscureText: widget.obscureText,
