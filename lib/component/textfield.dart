@@ -62,12 +62,8 @@ class _HourTextFieldState extends State<HourTextField> {
           left: 0,
           child: Text(
             widget.labelText ?? "",
-            style: HourStyles.label1.copyWith(
-              fontSize: 14.0,
-              height: 1.2,
-              color: _focusNode.hasFocus
-                  ? HourColors.primary300
-                  : HourColors.staticWhite,
+            style: HourStyles.body2.copyWith(
+              color: _focusNode.hasFocus ? HourColors.primary300 : HourColors.staticWhite,
             ),
           ),
         ),
@@ -75,8 +71,7 @@ class _HourTextFieldState extends State<HourTextField> {
           child: TextFormField(
             focusNode: _focusNode,
             controller: _controller,
-            style: HourStyles.label1.copyWith(
-              height: 1.3,
+            style: HourStyles.body2.copyWith(
               color: widget.textColor ?? HourColors.staticWhite,
             ),
             textAlignVertical: TextAlignVertical.center,
@@ -85,12 +80,10 @@ class _HourTextFieldState extends State<HourTextField> {
             keyboardType: widget.keyboardType,
             decoration: InputDecoration(
               hintText: widget.hintText,
-              hintStyle: HourStyles.label1.copyWith(height: 1.3),
-              helperText: widget.supportText,
-              helperStyle: HourStyles.label1.copyWith(
-                fontSize: 14,
-                height: 1.4,
+              hintStyle: HourStyles.body2.copyWith(
               ),
+              helperText: widget.supportText,
+              helperStyle: HourStyles.body2,
               fillColor: HourColors.primary300,
               enabledBorder: const UnderlineInputBorder(
                 borderSide: BorderSide(

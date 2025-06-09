@@ -53,10 +53,13 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         child: Center(
           child: Text(
             label,
-            style: const TextStyle(
-              color: HourColors.staticWhite,
-              fontWeight: FontWeight.w600,
-            ),
+            style: HourStyles.body2.copyWith(
+              color: HourColors.staticWhite
+            )
+            // TextStyle(
+            //   color: HourColors.staticWhite,
+            //   fontWeight: FontWeight.w600,
+            // ),
           ),
         ),
       ),
@@ -112,7 +115,6 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                   labelText: "소비 이름",
                   hintText: "소비 이름을 입력해주세요.",
                   controller: _titleTextFieldController,
-
                 ),
                 const SizedBox(height: 12),
                 HourTextField(
@@ -154,7 +156,9 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Divider(color: HourColors.gray500),
+                Divider(
+                    color: HourColors.gray500
+                ),
                 const SizedBox(height: 12),
                 Row(
                   children: [
