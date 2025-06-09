@@ -17,5 +17,5 @@ part "hour_database.g.dart";
 @Database(version: 1, entities: [CategoryEntity, HistoryEntity])
 abstract class HourDatabase extends FloorDatabase {
   CategoryDao get categoryDao;
-  HistoryDao get history;
+  HistoryDao get historyDao;
 }

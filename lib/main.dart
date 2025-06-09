@@ -8,6 +8,7 @@ import 'package:hour/feature/root/view/root_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'core/navigation/app_routes.dart';
+import 'feature/history/viewmodel/history_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,11 +21,13 @@ void main() async {
   // final scheduleProvider = ScheduleProvider(repository: repository);
 
   runApp(
-      // ChangeNotifierProvider(
-      //   create: (_) => ,
-      //   builder: (context, child) => const MyApp(),
-      // ),
-      const MyApp());
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => HistoryViewmodel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

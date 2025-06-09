@@ -9,18 +9,17 @@ class ModalBottomSheetContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: HourColors.staticBlack,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(28.0),
           topRight: Radius.circular(28.0),
         ),
       ),
-      child: ListView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            height: 16,
-          ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -31,13 +30,11 @@ class ModalBottomSheetContainer extends StatelessWidget {
                   color: HourColors.gray500,
                   borderRadius: BorderRadius.circular(10),
                 ),
-              )
+              ),
             ],
           ),
-          SizedBox(
-            height: 8,
-          ),
-          child
+          const SizedBox(height: 8),
+          Expanded(child: child),
         ],
       ),
     );

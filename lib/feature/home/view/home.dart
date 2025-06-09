@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
+import 'package:hour/feature/history/viewmodel/history_viewmodel.dart';
 import 'package:hour/feature/home/widget/home_bottom_sheet.dart';
+import 'package:provider/provider.dart';
+
+import '../../../component/appbar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,18 +15,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _reasonTextFieldController =
-  TextEditingController();
+  final TextEditingController _reasonTextFieldController = TextEditingController();
 
   void _showHomeBottomSheet(BuildContext context) {
+    final viewModel = Provider.of<HistoryViewmodel>(context, listen: false);
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.grey[900],
+      backgroundColor: HourColors.gray800,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       isScrollControlled: true,
-      builder: (context) => const HomeBottomSheet(),
+      builder: (_) => HomeBottomSheet(
+        context: context,
+        viewModel: viewModel,
+      ),
     );
   }
 
@@ -34,214 +41,117 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // return Consumer<HomeViewmodel>(builder:
-    //     (BuildContext context, HomeViewmodel viewModel, Widget? child) {
-    return Scaffold(
-        // appBar: PreferredSize(
-        //   preferredSize: Size.fromHeight(60),
-        //   child: DefaultAppbar(
-        //     title: '이번 달 소비',
-        //     onPlusClick: () {
-        //       showModalBottomSheet(
-        //         context: context,
-        //         builder: (context) {
-        //           return ChangeNotifierProvider.value(
-        //             value: viewModel,
-        //             child: Consumer<HomeViewmodel>(
-        //               builder: (
-        //                   BuildContext context,
-        //                   HomeViewmodel value,
-        //                   Widget? child,
-        //                   ) {
-        //                 return HomeBottomSheet(context, viewModel);
-        //               },
-        //             ),
-        //           );
-        //         },
-        //       );
-        //     },
-        //   ),
-        // ),
-
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Consumer<HistoryViewmodel>(
+      builder: (context, viewModel, _) {
+        return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(60),
+            child: DefaultAppbar(
+              title: '이번 달 소비',
+              onPlusClick: () => _showHomeBottomSheet(context),
+            ),
+          ),
+          backgroundColor: HourColors.staticBlack,
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ListView(
                 children: [
-                  Text(
-                    '이번달 요약',
-                    style: HourStyles.title1.copyWith(
-                        color: HourColors.staticWhite
+                  Container(
+                    decoration: BoxDecoration(
+                      color: HourColors.gray800,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('이번달 쓴 금액', style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
+                            Text('한도: ₩ 400,000', style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Text('₩ 100,000', style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
+                        const SizedBox(height: 10),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(7),
+                          child: LinearProgressIndicator(
+                            value: 0.4,
+                            backgroundColor: HourColors.gray600,
+                            valueColor: const AlwaysStoppedAnimation<Color>(HourColors.primary300),
+                            minHeight: 8,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text('₩ 300,000원 더 쓸 수 있어요!', style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
+                      ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => _showHomeBottomSheet(context),
-                    child: Image.asset(
-                      width: 24,
-                      height: 24,
-                      "assets/images/ic_plus.png",
-                      color: HourColors.gray700,
+                  const SizedBox(height: 24),
+                  Text('오늘의 소비', style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
+                  const SizedBox(height: 12),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: HourColors.gray800,
+                      borderRadius: BorderRadius.circular(16),
                     ),
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('오늘 쓴 금액', style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('₩ 10,000', style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
+                            Text('₩ 30,000', style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(7),
+                          child: LinearProgressIndicator(
+                            value: 0.4,
+                            backgroundColor: HourColors.gray600,
+                            valueColor: const AlwaysStoppedAnimation<Color>(HourColors.primary300),
+                            minHeight: 8,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const SpendingItem(
+                    icon: 'assets/images/ic_shopping.png',
+                    title: '용돈',
+                    subtitle: '한 달 용돈',
+                    price: '₩ 400,000',
+                    color: HourColors.primary400,
+                  ),
+                  const SpendingItem(
+                    icon: 'assets/images/ic_shopping.png',
+                    title: '쇼핑',
+                    subtitle: '졸업사진 옷',
+                    price: '₩ 400,000',
+                    color: HourColors.primary300,
+                  ),
+                  const SpendingItem(
+                    icon: 'assets/images/ic_shopping.png',
+                    title: '쇼핑',
+                    subtitle: '졸업사진 옷',
+                    price: '₩ 400,000',
+                    color: HourColors.primary300,
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              Container(
-                decoration: BoxDecoration(
-                  color: HourColors.gray800,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('이번달 쓴 금액',
-                            style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite
-                            )
-                        ),
-                        Text(
-                          '한도: ₩ 400,000',
-                          style: HourStyles.label1.copyWith(
-                              color: HourColors.staticWhite
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                        height: 8
-                    ),
-                    Text(
-                      '₩ 100,000',
-                      style: HourStyles.title1.copyWith(
-                          color: HourColors.staticWhite
-                      ),
-                    ),
-                    SizedBox(
-                        height: 10
-                    ),
-                    Container(
-                      height: 8,
-                      child: LinearProgressIndicator(
-                        value: 0.4,
-                        backgroundColor: HourColors.gray600,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          HourColors.primary300,
-                        ),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                    ),
-                    const SizedBox(
-                        height: 8
-                    ),
-                    Text(
-                      '₩ 300,000원 더 쓸 수 있어요!',
-                      style: HourStyles.label2.copyWith(
-                          color: HourColors.staticWhite
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                  height: 24
-              ),
-              Text(
-                '오늘의 소비',
-                style: HourStyles.title1.copyWith(
-                    color: HourColors.staticWhite
-                ),
-              ),
-              const SizedBox(
-                  height: 12
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: HourColors.gray800,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                            '오늘 쓴 금액',
-                            style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite
-                            )
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                        height: 8
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '₩ 10,000',
-                          style: HourStyles.title1.copyWith(
-                              color: HourColors.staticWhite
-                          ),
-                        ),
-                        Text('₩ 30,000',
-                            style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite
-                            )
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    Container(
-                      height: 8,
-                      child: LinearProgressIndicator(
-                        value: 0.4,
-                        backgroundColor: HourColors.gray600,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                          HourColors.primary300,
-                        ),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              const SpendingItem(
-                icon: 'assets/images/ic_shopping.png',
-                title: '용돈',
-                subtitle: '한 달 용돈',
-                price: '₩ 400,000',
-                color: HourColors.primary400,
-              ),
-              const SpendingItem(
-                icon: 'assets/images/ic_shopping.png',
-                title: '쇼핑',
-                subtitle: '졸업사진 옷',
-                price: '₩ 400,000',
-                color: HourColors.primary300,
-              ),
-              const SpendingItem(
-                icon: 'assets/images/ic_shopping.png',
-                title: '쇼핑',
-                subtitle: '졸업사진 옷',
-                price: '₩ 400,000',
-                color: HourColors.primary300,
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -276,9 +186,9 @@ class SpendingItem extends StatelessWidget {
           CircleAvatar(
             backgroundColor: HourColors.gray600,
             child: Image.asset(
+              icon,
               width: 24,
               height: 24,
-              icon,
               color: color,
             ),
           ),
@@ -287,27 +197,12 @@ class SpendingItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    title,
-                    style: HourStyles.label1.copyWith(
-                        color: HourColors.staticWhite
-                    )
-                ),
-                Text(
-                    subtitle,
-                    style: HourStyles.label2.copyWith(
-                        color: HourColors.staticWhite
-                    )
-                ),
+                Text(title, style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
+                Text(subtitle, style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
               ],
             ),
           ),
-          Text(
-              price,
-              style: HourStyles.label2.copyWith(
-                  color: HourColors.staticWhite
-              )
-          ),
+          Text(price, style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
         ],
       ),
     );

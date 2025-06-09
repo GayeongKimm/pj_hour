@@ -13,6 +13,18 @@ abstract class HistoryDao {
   @Query('SELECT * FROM $_tableName')
   Stream<List<HistoryEntity>> findAllEntitiesWithStream();
 
+  @Query('DELETE FROM $_tableName WHERE id = :id')
+  Future<void> deleteHistoryEntityById(int id);
+
+  @insert
+  Future<void> insertHistoryEntity(HistoryEntity historyEntity);
+
+  @update
+  Future<void> updateHistoryEntity(HistoryEntity historyEntity);
+
+  @delete
+  Future<void> deleteHistoryEntity(HistoryEntity historyEntity);
+
   @Query("DELETE FROM note")
   Future<void> deleteAllOutEntities();
 

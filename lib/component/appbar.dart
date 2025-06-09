@@ -11,16 +11,18 @@ class DefaultAppbar extends StatelessWidget {
     super.key,
     required this.title,
     required this.onPlusClick,
-    this.colors = HourColors.primary300,
+    this.colors = HourColors.gray700,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: HourColors.staticWhite,
+      backgroundColor: HourColors.staticBlack,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+          padding: const EdgeInsets.symmetric(
+              vertical: 6, horizontal: 4
+          ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -29,7 +31,9 @@ class DefaultAppbar extends StatelessWidget {
               ),
               Text(
                 title,
-                style: HourStyles.title1,
+                style: HourStyles.title1.copyWith(
+                    color: HourColors.staticWhite
+                ),
               ),
               Expanded(child: SizedBox()),
               SizedBox(
@@ -42,7 +46,7 @@ class DefaultAppbar extends StatelessWidget {
                       width: 24,
                       height: 24,
                       child: Image.asset(
-                        "assets/images/ic_setting.png",
+                        "assets/images/ic_plus.png",
                         color: colors,
                       ),
                     ),

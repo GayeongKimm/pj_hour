@@ -15,7 +15,6 @@ import 'package:hour/local/entity/category_entity.dart';
 class HistoryEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
-
   final String title;
   final String content;
   final HistoryType type;
@@ -23,15 +22,15 @@ class HistoryEntity {
   final int price;
   final DateTime date;
 
-  HistoryEntity(
-      this.id,
-      this.title,
-      this.content,
-      this.type,
-      this.categoryId,
-      this.price,
-      this.date,
-      );
+  HistoryEntity({
+    this.id,
+    required this.title,
+    required this.content,
+    required this.type,
+    required this.categoryId,
+    required this.price,
+    required this.date,
+  });
 
   @override
   bool operator ==(Object other) =>
