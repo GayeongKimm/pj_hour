@@ -43,8 +43,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         });
       },
       child: Container(
-        width: 62,
-        height: 44,
+        width: 58,
+        height: 40,
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(8),
@@ -53,13 +53,9 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         child: Center(
           child: Text(
             label,
-            style: HourStyles.body2.copyWith(
+            style: HourStyles.label1.copyWith(
               color: HourColors.staticWhite
-            )
-            // TextStyle(
-            //   color: HourColors.staticWhite,
-            //   fontWeight: FontWeight.w600,
-            // ),
+            ),
           ),
         ),
       ),
@@ -126,9 +122,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                 const SizedBox(height: 12),
                 Row(
                   children: [
-                    const Text(
+                    Text(
                         "카테고리",
-                        style: TextStyle(color: HourColors.gray500)
+                        style: HourStyles.label1.copyWith(
+                            color: HourColors.gray500
+                        ),
                     ),
                     const Spacer(),
                     Image.asset(
@@ -156,7 +154,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                   ],
                 ),
                 const SizedBox(height: 12),
-                Divider(
+                const Divider(
                     color: HourColors.gray500
                 ),
                 const SizedBox(height: 12),
@@ -169,9 +167,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                       color: HourColors.gray500,
                     ),
                     const SizedBox(width: 8),
-                    const Text(
+                    Text(
                       "새로운 소비 기록하기",
-                      style: TextStyle(color: Colors.white),
+                      style: HourStyles.label1.copyWith(
+                          color: HourColors.staticWhite
+                      ),
                     ),
                   ],
                 ),
@@ -187,11 +187,10 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "저장하기",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                    style: HourStyles.label1.copyWith(
+                        color: HourColors.staticWhite
                     ),
                   ),
                 ),
