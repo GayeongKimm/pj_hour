@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(60),
-            child: DefaultAppbar(
+            child: SubAppbar(
               title: '이번 달 소비',
               onPlusClick: () => _showHomeBottomSheet(context),
             ),

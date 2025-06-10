@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/analytic/view/analytic.dart';
+import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
 import 'package:hour/feature/home/view/home.dart';
 import 'package:hour/feature/root/view/root_screen.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HistoryViewmodel()),
+        ChangeNotifierProvider(create: (_) => CategoryViewmodel())
       ],
       child: MyApp(),
     ),

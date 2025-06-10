@@ -13,11 +13,11 @@ class HistoryViewmodel with ChangeNotifier {
   List<HistoryEntity> _historyEntities = List.empty();
   List<HistoryEntity> get historyEntities => _historyEntities;
 
-  StreamSubscription<List<HistoryEntity>>? _nightStudyStreamSubscription;
+  StreamSubscription<List<HistoryEntity>>? _historyStreamSubscription;
 
-  void _getNightStudyEntities() async {
+  void _getHistoryEntities() async {
     final database = await DatabaseManager.getDatabase();
-    _nightStudyStreamSubscription
+    _historyStreamSubscription
     = database.historyDao.findAllEntitiesWithStream().listen((data) {
       _historyEntities = data;
       notifyListeners();
@@ -37,7 +37,7 @@ class HistoryViewmodel with ChangeNotifier {
 
   @override
   void dispose() {
-    _nightStudyStreamSubscription?.cancel();
+    _historyStreamSubscription?.cancel();
     super.dispose();
   }
 }

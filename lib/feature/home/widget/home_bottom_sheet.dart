@@ -43,8 +43,8 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
         });
       },
       child: Container(
-        width: 58,
-        height: 40,
+        width: 176,
+        height: 43,
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(8),
@@ -153,18 +153,14 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
-                const Divider(
-                    color: HourColors.gray500
-                ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Image.asset(
                       "assets/images/ic_plus.png",
-                      width: 24,
-                      height: 24,
-                      color: HourColors.gray500,
+                      width: 20,
+                      height: 20,
+                      color: HourColors.staticWhite,
                     ),
                     const SizedBox(width: 8),
                     Text(

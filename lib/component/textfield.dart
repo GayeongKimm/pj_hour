@@ -55,7 +55,8 @@ class _HourTextFieldState extends State<HourTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (widget.labelText != null)
           Text(
@@ -64,35 +65,35 @@ class _HourTextFieldState extends State<HourTextField> {
               color: _focusNode.hasFocus ? HourColors.primary300 : HourColors.staticWhite,
             ),
           ),
-        Positioned(
-          child: TextFormField(
-            focusNode: _focusNode,
-            controller: _controller,
-            style: HourStyles.label1.copyWith(
-              color: widget.textColor ?? HourColors.staticWhite,
-            ),
-            textAlignVertical: TextAlignVertical.center,
-            cursorColor: HourColors.primary300,
-            obscureText: widget.obscureText,
-            keyboardType: widget.keyboardType,
-            decoration: InputDecoration(
-              hintText: widget.hintText,
-              hintStyle: HourStyles.label1,
-              helperText: widget.supportText,
-              helperStyle: HourStyles.label1,
-              fillColor: HourColors.primary300,
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: HourColors.gray500,
-                ),
+        const SizedBox(height: 4),
+        TextFormField(
+          focusNode: _focusNode,
+          controller: _controller,
+          style: HourStyles.label1.copyWith(
+            color: widget.textColor ?? HourColors.staticWhite,
+          ),
+          textAlignVertical: TextAlignVertical.center,
+          cursorColor: HourColors.primary300,
+          obscureText: widget.obscureText,
+          keyboardType: widget.keyboardType,
+          decoration: InputDecoration(
+            isDense: true,
+            hintText: widget.hintText,
+            hintStyle: HourStyles.label1,
+            helperText: widget.supportText,
+            helperStyle: HourStyles.label1,
+            fillColor: HourColors.primary300,
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: HourColors.gray500,
               ),
-              focusedBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: HourColors.primary300,
-                ),
-              ),
-              errorBorder: InputBorder.none,
             ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: HourColors.primary300,
+              ),
+            ),
+            errorBorder: InputBorder.none,
           ),
         ),
       ],

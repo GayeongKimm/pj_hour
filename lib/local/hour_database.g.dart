@@ -123,13 +123,51 @@ class _$CategoryDao extends CategoryDao {
   _$CategoryDao(
     this.database,
     this.changeListener,
-  ) : _queryAdapter = QueryAdapter(database, changeListener);
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _categoryEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'category',
+            (CategoryEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'month': item.month,
+                  'amount': item.amount,
+                  'date': _dateTimeConverter.encode(item.date)
+                },
+            changeListener),
+        _categoryEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'category',
+            ['id'],
+            (CategoryEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'month': item.month,
+                  'amount': item.amount,
+                  'date': _dateTimeConverter.encode(item.date)
+                },
+            changeListener),
+        _categoryEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'category',
+            ['id'],
+            (CategoryEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'month': item.month,
+                  'amount': item.amount,
+                  'date': _dateTimeConverter.encode(item.date)
+                },
+            changeListener);
 
   final sqflite.DatabaseExecutor database;
 
   final StreamController<String> changeListener;
 
   final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<CategoryEntity> _categoryEntityInsertionAdapter;
+
+  final UpdateAdapter<CategoryEntity> _categoryEntityUpdateAdapter;
+
+  final DeletionAdapter<CategoryEntity> _categoryEntityDeletionAdapter;
 
   @override
   Future<CategoryEntity?> findOutEntityById(int id) async {
@@ -165,8 +203,31 @@ class _$CategoryDao extends CategoryDao {
   }
 
   @override
+  Future<void> deleteCategoryEntityById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM category WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
   Future<void> deleteAllOutEntities() async {
     await _queryAdapter.queryNoReturn('DELETE FROM note');
+  }
+
+  @override
+  Future<void> insertCategoryEntity(CategoryEntity categoryEntity) async {
+    await _categoryEntityInsertionAdapter.insert(
+        categoryEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateCategoryEntity(CategoryEntity categoryEntity) async {
+    await _categoryEntityUpdateAdapter.update(
+        categoryEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteCategoryEntity(CategoryEntity categoryEntity) async {
+    await _categoryEntityDeletionAdapter.delete(categoryEntity);
   }
 }
 

@@ -16,14 +16,16 @@ class HistoryCreateViewModel with ChangeNotifier {
     required DateTime date
   }) async {
     final database = await DatabaseManager.getDatabase();
-    await database.historyDao.insertHistoryEntity(HistoryEntity(
-        title: title,
-        content: content,
-        type: type,
-        categoryId: categoryId,
-        price: price,
-        date: date
-    ));
+    await database.historyDao.insertHistoryEntity(
+        HistoryEntity(
+            title: title,
+            content: content,
+            type: type,
+            categoryId: categoryId,
+            price: price,
+            date: date
+        )
+    );
 
     print(await database.historyDao.findAllEntities());
 

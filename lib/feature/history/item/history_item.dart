@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hour/component/theme/color.dart';
+import 'package:hour/component/theme/style.dart';
 import 'package:intl/intl.dart';
 
 import '../../home/item/home_item.dart';
@@ -36,7 +38,7 @@ class HistoryItem extends StatelessWidget {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: HourColors.staticBlack,
           builder: (context) {
             return Padding(
               padding: const EdgeInsets.all(20.0),
@@ -48,10 +50,9 @@ class HistoryItem extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: HourStyles.body1.copyWith(
+                          color: HourColors.gray800
+                        )
                       ),
                       const Spacer(),
                       IconButton(
@@ -66,7 +67,9 @@ class HistoryItem extends StatelessWidget {
                   const SizedBox(height: 10),
                   Text(
                     content,
-                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                    style: HourStyles.label1.copyWith(
+                        color: HourColors.gray700
+                    ),
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -91,7 +94,9 @@ class HistoryItem extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(
                     '날짜: ${DateFormat.yMMMd().format(date)}',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    style: HourStyles.label1.copyWith(
+                        color: HourColors.gray800
+                    ),
                   ),
                   const SizedBox(height: 20),
                   SizedBox(
@@ -117,7 +122,7 @@ class HistoryItem extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
-            BoxShadow(color: Colors.grey.shade200, blurRadius: 5),
+            BoxShadow(color: HourColors.gray500, blurRadius: 5),
           ],
         ),
         child: Row(
