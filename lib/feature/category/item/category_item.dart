@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../component/theme/color.dart';
-import '../../../component/theme/style.dart';
 
 class CategoryItem extends StatelessWidget {
   final int? id;
-  final String month;
+  final String title;
   final int amount;
   final DateTime date;
   final Function() onTrashClick;
@@ -15,7 +13,7 @@ class CategoryItem extends StatelessWidget {
   const CategoryItem({
     super.key,
     this.id,
-    required this.month,
+    required this.title,
     required this.amount,
     required this.date,
     required this.onTrashClick,

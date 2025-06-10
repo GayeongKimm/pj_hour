@@ -98,7 +98,7 @@ class _$HourDatabase extends HourDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `month` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `type` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `date` TEXT NOT NULL)');
 
@@ -129,7 +129,7 @@ class _$CategoryDao extends CategoryDao {
             'category',
             (CategoryEntity item) => <String, Object?>{
                   'id': item.id,
-                  'month': item.month,
+                  'title': item.title,
                   'amount': item.amount,
                   'date': _dateTimeConverter.encode(item.date)
                 },
@@ -140,7 +140,7 @@ class _$CategoryDao extends CategoryDao {
             ['id'],
             (CategoryEntity item) => <String, Object?>{
                   'id': item.id,
-                  'month': item.month,
+                  'title': item.title,
                   'amount': item.amount,
                   'date': _dateTimeConverter.encode(item.date)
                 },
@@ -151,7 +151,7 @@ class _$CategoryDao extends CategoryDao {
             ['id'],
             (CategoryEntity item) => <String, Object?>{
                   'id': item.id,
-                  'month': item.month,
+                  'title': item.title,
                   'amount': item.amount,
                   'date': _dateTimeConverter.encode(item.date)
                 },
@@ -174,7 +174,7 @@ class _$CategoryDao extends CategoryDao {
     return _queryAdapter.query('SELECT * FROM category WHERE id = ?1',
         mapper: (Map<String, Object?> row) => CategoryEntity(
             id: row['id'] as int?,
-            month: row['month'] as String,
+            title: row['title'] as String,
             amount: row['amount'] as int,
             date: _dateTimeConverter.decode(row['date'] as String)),
         arguments: [id]);
@@ -185,7 +185,7 @@ class _$CategoryDao extends CategoryDao {
     return _queryAdapter.queryList('SELECT * FROM category',
         mapper: (Map<String, Object?> row) => CategoryEntity(
             id: row['id'] as int?,
-            month: row['month'] as String,
+            title: row['title'] as String,
             amount: row['amount'] as int,
             date: _dateTimeConverter.decode(row['date'] as String)));
   }
@@ -195,7 +195,7 @@ class _$CategoryDao extends CategoryDao {
     return _queryAdapter.queryListStream('SELECT * FROM category',
         mapper: (Map<String, Object?> row) => CategoryEntity(
             id: row['id'] as int?,
-            month: row['month'] as String,
+            title: row['title'] as String,
             amount: row['amount'] as int,
             date: _dateTimeConverter.decode(row['date'] as String)),
         queryableName: 'category',

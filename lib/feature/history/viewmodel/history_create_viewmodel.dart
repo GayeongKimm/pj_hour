@@ -5,30 +5,41 @@ import 'package:hour/local/entity/history_entity.dart';
 
 import '../../../local/database_manager.dart';
 import '../../home/item/home_item.dart';
+import 'package:flutter/material.dart';
 
-class HistoryCreateViewModel with ChangeNotifier {
-  Future<bool> createHistory({
+class HistoryCreateViewModel extends ChangeNotifier {
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  Future<void> createHistory({
     required String title,
     required String content,
     required HistoryType type,
     required int categoryId,
     required int price,
-    required DateTime date
+    required DateTime date,
   }) async {
-    final database = await DatabaseManager.getDatabase();
-    await database.historyDao.insertHistoryEntity(
-        HistoryEntity(
-            title: title,
-            content: content,
-            type: type,
-            categoryId: categoryId,
-            price: price,
-            date: date
-        )
-    );
+    try {
+      _isLoading = true;
+      notifyListeners();
 
-    print(await database.historyDao.findAllEntities());
+      final database = await DatabaseManager.getDatabase();
+      final historyEntity = HistoryEntity(
+        title: title,
+        content: content,
+        type: type,
+        categoryId: categoryId,
+        price: price,
+        date: date,
+      );
 
-    return true;
+      await database.historyDao.insertHistoryEntity(historyEntity);
+    } catch (e) {
+      debugPrint('Error creating history: $e');
+      rethrow;
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 }

@@ -31,115 +31,73 @@ class HistoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          backgroundColor: HourColors.staticBlack,
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+    final formatter = NumberFormat('#,###');
+    final formattedPrice = formatter.format(price);
+    final formattedDate = DateFormat('yyyy.MM.dd').format(date);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: Material(
+        color: HourColors.staticBlack,
+        child: InkWell(
+          onTap: onClickCreate,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: type == HistoryType.CONSUMPTION ? HourColors.orange500 : HourColors.primary400,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      type == HistoryType.CONSUMPTION ? "지출" : "수입",
+                      style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         title,
                         style: HourStyles.body1.copyWith(
-                          color: HourColors.gray800
-                        )
+                          color: HourColors.staticWhite,
+                        ),
                       ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          onTrashClick();
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    content,
-                    style: HourStyles.label1.copyWith(
-                        color: HourColors.gray700
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Chip(
-                        label: Text(type.name),
-                        backgroundColor: type == HistoryType.INCOME
-                            ? Colors.green[100]
-                            : Colors.red[100],
-                      ),
-                      const SizedBox(width: 8),
-                      Chip(
-                        label: Text('카테고리 ID: $categoryId'),
+                      const SizedBox(height: 4),
+                      Text(
+                        formattedDate,
+                        style: HourStyles.label2.copyWith(
+                          color: HourColors.gray500,
+                        ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '금액: $price원',
-                    style: const TextStyle(fontSize: 16),
+                ),
+                Text(
+                  "${type == HistoryType.CONSUMPTION ? "-" : "+"}₩$formattedPrice",
+                  style: HourStyles.body1.copyWith(
+                    color: type == HistoryType.CONSUMPTION ? HourColors.orange500 : HourColors.primary400,
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    '날짜: ${DateFormat.yMMMd().format(date)}',
-                    style: HourStyles.label1.copyWith(
-                        color: HourColors.gray800
-                    ),
+                ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.delete_outline,
+                    color: HourColors.gray500,
                   ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        onClickCreate();
-                      },
-                      child: const Text('수정하기'),
-                    ),
-                  )
-                ],
-              ),
-            );
-          },
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(color: HourColors.gray500, blurRadius: 5),
-          ],
-        ),
-        child: Row(
-          children: [
-            Icon(
-              type == HistoryType.INCOME ? Icons.arrow_downward : Icons.arrow_upward,
-              color: type == HistoryType.INCOME ? Colors.green : Colors.red,
+                  onPressed: onTrashClick,
+                ),
+              ],
             ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ),
-            Text('$price원'),
-          ],
+          ),
         ),
       ),
     );

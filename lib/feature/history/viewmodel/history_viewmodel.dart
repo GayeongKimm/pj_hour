@@ -1,13 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:hour/feature/home/item/home_item.dart';
+import 'package:flutter/material.dart';
+import 'package:hour/local/database_manager.dart';
 import 'package:hour/local/entity/history_entity.dart';
 
-import '../../../local/database_manager.dart';
-
 class HistoryViewmodel with ChangeNotifier {
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 

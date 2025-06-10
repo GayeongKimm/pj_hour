@@ -9,6 +9,7 @@ import 'package:hour/feature/root/view/root_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'core/navigation/app_routes.dart';
+import 'feature/history/viewmodel/history_create_viewmodel.dart';
 import 'feature/history/viewmodel/history_viewmodel.dart';
 
 void main() async {
@@ -25,7 +26,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => HistoryViewmodel()),
-        ChangeNotifierProvider(create: (_) => CategoryViewmodel())
+        ChangeNotifierProvider(create: (_) => CategoryViewmodel()),
+        ChangeNotifierProvider(create: (_) => HistoryCreateViewModel()),
       ],
       child: MyApp(),
     ),

@@ -6,7 +6,7 @@ class CategoryEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
 
-  final String month;
+  final String title;
 
   final int amount;
 
@@ -14,7 +14,7 @@ class CategoryEntity {
 
   CategoryEntity({
     this.id,
-    required this.month,
+    required this.title,
     required this.amount,
     required this.date
   });
@@ -25,19 +25,19 @@ class CategoryEntity {
           other is CategoryEntity &&
               runtimeType == other.runtimeType &&
               id == other.id &&
-              month == other.month &&
+              title == other.title &&
               amount == other.amount &&
               date == other.date;
 
   @override
   int get hashCode =>
       id.hashCode ^
-      month.hashCode ^
+      title.hashCode ^
       amount.hashCode ^
       date.hashCode;
 
   @override
   String toString() {
-    return 'CategoryEntity(id: $id, month: $month, amount: $amount, date: $date)';
+    return 'CategoryEntity(id: $id, title: $title, amount: $amount, date: $date)';
   }
 }

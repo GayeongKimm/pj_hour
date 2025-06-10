@@ -7,16 +7,16 @@ import '../../../local/database_manager.dart';
 
 class CategoryCreateViewmodel with ChangeNotifier {
   Future<bool> createCategory({
-    required String month,
+    required String title,
     required int amount,
     required DateTime date,
   }) async {
     final database = await DatabaseManager.getDatabase();
     await database.categoryDao.insertCategoryEntity(
         CategoryEntity(
-            month: month,
-            amount: amount,
-            date: date
+          title: title,
+          amount: amount,
+          date: date,
         )
     );
 

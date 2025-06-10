@@ -6,6 +6,7 @@ import 'package:hour/feature/home/widget/home_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../../component/appbar.dart';
+import '../../history/item/history_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -89,62 +90,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text('₩ 300,000원 더 쓸 수 있어요!', style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text('오늘의 소비', style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
-                  const SizedBox(height: 12),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: HourColors.gray800,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('오늘 쓴 금액', style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('₩ 10,000', style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
-                            Text('₩ 30,000', style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
-                          ],
-                        ),
-                        const SizedBox(height: 10),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: LinearProgressIndicator(
-                            value: 0.4,
-                            backgroundColor: HourColors.gray600,
-                            valueColor: const AlwaysStoppedAnimation<Color>(HourColors.primary300),
-                            minHeight: 8,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const SpendingItem(
-                    icon: 'assets/images/ic_shopping.png',
-                    title: '용돈',
-                    subtitle: '한 달 용돈',
-                    price: '₩ 400,000',
-                    color: HourColors.primary400,
-                  ),
-                  const SpendingItem(
-                    icon: 'assets/images/ic_shopping.png',
-                    title: '쇼핑',
-                    subtitle: '졸업사진 옷',
-                    price: '₩ 400,000',
-                    color: HourColors.primary300,
-                  ),
-                  const SpendingItem(
-                    icon: 'assets/images/ic_shopping.png',
-                    title: '쇼핑',
-                    subtitle: '졸업사진 옷',
-                    price: '₩ 400,000',
-                    color: HourColors.primary300,
                   ),
                 ],
               ),
