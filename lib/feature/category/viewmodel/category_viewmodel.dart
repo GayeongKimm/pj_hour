@@ -6,7 +6,6 @@ import 'package:hour/local/entity/category_entity.dart';
 import '../../../local/database_manager.dart';
 
 class CategoryViewmodel with ChangeNotifier {
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 

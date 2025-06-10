@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hour/component/appbar.dart';
-import 'package:hour/component/default_appbar.dart';
-import 'package:hour/component/theme/color.dart';
-import 'package:hour/component/theme/style.dart';
-import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
-import 'package:hour/feature/setting/widget/setting_bottom_sheet.dart';
-import 'package:hour/feature/setting/widget/setting_cell.dart';
 import 'package:provider/provider.dart';
+import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
+
+import '../../../component/appbar.dart';
+import '../../../component/default_appbar.dart';
+import '../../../component/theme/color.dart';
+import '../widget/sell_widget.dart';
+import '../widget/setting_bottom_sheet.dart';
+import '../widget/setting_cell.dart';
 
 class SettingScreen extends StatelessWidget {
   const SettingScreen({super.key});
@@ -31,6 +32,9 @@ class SettingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final categoryViewModel = context.watch<CategoryViewmodel>();
+    final categories = categoryViewModel.categoryEntities;
+
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -66,26 +70,22 @@ class SettingScreen extends StatelessWidget {
                 onPlusClick: () => _showAddCategoryBottomSheet(context),
               ),
             ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                itemCount: categories.length,
+                itemBuilder: (context, index) {
+                  final category = categories[index];
+                  return CategoryCell(
+                    title: category.title,
+                    amount: category.amount,
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
-  }
-}
-
-Widget _loading(bool isLoading) {
-  if (isLoading) {
-    return Center(
-      child: Container(
-        width: 50,
-        height: 50,
-        child: CircularProgressIndicator(
-          backgroundColor: HourColors.staticWhite,
-          color: HourColors.primary300,
-        ),
-      ),
-    );
-  } else {
-    return SizedBox();
   }
 }

@@ -166,7 +166,8 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                       if (context.mounted) {
                         Navigator.of(context).pop();
                       }
-                      Future.delayed(const Duration(milliseconds: 300), () {
+                      Future.delayed(
+                          const Duration(milliseconds: 300), () {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -174,7 +175,8 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                             ),
                           );
                         }
-                      });
+                      }
+                      );
                     } catch (e) {
                       print('$e');
                       ScaffoldMessenger.of(context).showSnackBar(
