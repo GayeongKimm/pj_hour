@@ -15,7 +15,7 @@ class CategoryViewmodel with ChangeNotifier {
 
   StreamSubscription<List<CategoryEntity>>? _categoryStreamSubscription;
 
-  void _getCategoryEntities() async {
+  void getCategoryEntities() async {
     final database = await DatabaseManager.getDatabase();
     _categoryStreamSubscription
     = database.categoryDao.findAllEntitiesWithStream().listen((data) {

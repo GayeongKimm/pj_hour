@@ -162,4 +162,22 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
         }
     );
   }
+
+  Widget _loading(bool isLoading) {
+    if (isLoading) {
+      return Center(
+        child: Container(
+          width: 50,
+          height: 50,
+          child: const CircularProgressIndicator(
+            backgroundColor: HourColors.staticWhite,
+            color: HourColors.primary300,
+          ),
+        ),
+      );
+    } else {
+      return SizedBox();
+    }
+  }
+
 }

@@ -8,7 +8,11 @@ class SettingCell extends StatelessWidget {
   final String title;
   final int budget;
 
-  SettingCell({super.key, required this.title, required this.budget});
+  SettingCell({
+    super.key,
+    required this.title,
+    required this.budget
+  });
 
   final formatter = NumberFormat('#,###');
 

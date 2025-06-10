@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hour/component/appbar.dart';
-import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/default_appbar.dart';
+import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
 import 'package:hour/feature/setting/widget/setting_bottom_sheet.dart';
@@ -70,5 +70,22 @@ class SettingScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Widget _loading(bool isLoading) {
+  if (isLoading) {
+    return Center(
+      child: Container(
+        width: 50,
+        height: 50,
+        child: CircularProgressIndicator(
+          backgroundColor: HourColors.staticWhite,
+          color: HourColors.primary300,
+        ),
+      ),
+    );
+  } else {
+    return SizedBox();
   }
 }

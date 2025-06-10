@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:hour/feature/home/item/home_item.dart';
 import 'package:hour/local/entity/history_entity.dart';
 
 import '../../../local/database_manager.dart';
@@ -17,8 +18,7 @@ class HistoryViewmodel with ChangeNotifier {
 
   void _getHistoryEntities() async {
     final database = await DatabaseManager.getDatabase();
-    _historyStreamSubscription
-    = database.historyDao.findAllEntitiesWithStream().listen((data) {
+    _historyStreamSubscription = database.historyDao.findAllEntitiesWithStream().listen((data) {
       _historyEntities = data;
       notifyListeners();
     });
