@@ -100,7 +100,7 @@ class _$HourDatabase extends HourDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `content` TEXT NOT NULL, `type` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `date` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `type` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `date` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -242,7 +242,6 @@ class _$HistoryDao extends HistoryDao {
             (HistoryEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
-                  'content': item.content,
                   'type': _historyTypeConverter.encode(item.type),
                   'categoryId': item.categoryId,
                   'price': item.price,
@@ -256,7 +255,6 @@ class _$HistoryDao extends HistoryDao {
             (HistoryEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
-                  'content': item.content,
                   'type': _historyTypeConverter.encode(item.type),
                   'categoryId': item.categoryId,
                   'price': item.price,
@@ -270,7 +268,6 @@ class _$HistoryDao extends HistoryDao {
             (HistoryEntity item) => <String, Object?>{
                   'id': item.id,
                   'title': item.title,
-                  'content': item.content,
                   'type': _historyTypeConverter.encode(item.type),
                   'categoryId': item.categoryId,
                   'price': item.price,
@@ -296,7 +293,6 @@ class _$HistoryDao extends HistoryDao {
         mapper: (Map<String, Object?> row) => HistoryEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
-            content: row['content'] as String,
             type: _historyTypeConverter.decode(row['type'] as String),
             categoryId: row['categoryId'] as int,
             price: row['price'] as int,
@@ -310,7 +306,6 @@ class _$HistoryDao extends HistoryDao {
         mapper: (Map<String, Object?> row) => HistoryEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
-            content: row['content'] as String,
             type: _historyTypeConverter.decode(row['type'] as String),
             categoryId: row['categoryId'] as int,
             price: row['price'] as int,
@@ -323,7 +318,6 @@ class _$HistoryDao extends HistoryDao {
         mapper: (Map<String, Object?> row) => HistoryEntity(
             id: row['id'] as int?,
             title: row['title'] as String,
-            content: row['content'] as String,
             type: _historyTypeConverter.decode(row['type'] as String),
             categoryId: row['categoryId'] as int,
             price: row['price'] as int,

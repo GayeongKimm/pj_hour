@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:hour/local/database_manager.dart';
 import 'package:hour/local/entity/history_entity.dart';
 
+import '../../home/item/home_item.dart';
+
 class HistoryViewmodel with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -19,6 +21,27 @@ class HistoryViewmodel with ChangeNotifier {
       _historyEntities = data;
       notifyListeners();
     });
+  }
+
+  Future<void> addCategory({
+    required String title,
+    required HistoryType type,
+    required int categoryId,
+    required int price,
+    required DateTime date,
+  }) async {
+    final database = await DatabaseManager.getDatabase();
+
+    final newCategory = HistoryEntity(
+        title: title,
+        type: type,
+        categoryId: categoryId,
+        price: price,
+        date: date,
+    );
+
+    await database.historyDao.insertHistoryEntity(newCategory);
+    notifyListeners();
   }
 
   void removeEntity(int id) async {

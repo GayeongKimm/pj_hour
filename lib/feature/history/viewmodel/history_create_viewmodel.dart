@@ -13,7 +13,6 @@ class HistoryCreateViewModel extends ChangeNotifier {
 
   Future<void> createHistory({
     required String title,
-    required String content,
     required HistoryType type,
     required int categoryId,
     required int price,
@@ -26,7 +25,6 @@ class HistoryCreateViewModel extends ChangeNotifier {
       final database = await DatabaseManager.getDatabase();
       final historyEntity = HistoryEntity(
         title: title,
-        content: content,
         type: type,
         categoryId: categoryId,
         price: price,

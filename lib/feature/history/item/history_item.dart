@@ -8,7 +8,6 @@ import '../../home/item/home_item.dart';
 class HistoryItem extends StatelessWidget {
   final int? id;
   final String title;
-  final String content;
   final HistoryType type;
   final int categoryId;
   final int price;
@@ -20,7 +19,6 @@ class HistoryItem extends StatelessWidget {
     super.key,
     this.id,
     required this.title,
-    required this.content,
     required this.type,
     required this.categoryId,
     required this.price,

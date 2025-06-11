@@ -41,7 +41,6 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<CategoryViewmodel>(context);
-
     return DraggableScrollableSheet(
       initialChildSize: 0.45,
       minChildSize: 0.3,
@@ -56,7 +55,7 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
               children: [
                 const SizedBox(height: 12),
                 Text(
-                  "소비 기록하기",
+                  "카테고리 생성하기",
                   style: HourStyles.title1.copyWith(
                       color: HourColors.staticWhite
                   ),

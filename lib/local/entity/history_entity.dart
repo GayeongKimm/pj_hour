@@ -5,9 +5,7 @@ import 'package:hour/feature/home/item/home_item.dart';
 class HistoryEntity {
   @PrimaryKey(autoGenerate: true)
   final int? id;
-
   final String title;
-  final String content;
   final HistoryType type;
   final int categoryId;
   final int price;
@@ -16,7 +14,6 @@ class HistoryEntity {
   HistoryEntity({
     this.id,
     required this.title,
-    required this.content,
     required this.type,
     required this.categoryId,
     required this.price,
@@ -30,7 +27,6 @@ class HistoryEntity {
           runtimeType == other.runtimeType &&
           id == other.id &&
           title == other.title &&
-          content == other.content &&
           type == other.type &&
           categoryId == other.categoryId &&
           price == other.price &&
@@ -40,7 +36,6 @@ class HistoryEntity {
   int get hashCode =>
       id.hashCode ^
       title.hashCode ^
-      content.hashCode ^
       type.hashCode ^
       categoryId.hashCode ^
       price.hashCode ^
@@ -48,6 +43,6 @@ class HistoryEntity {
 
   @override
   String toString() {
-    return 'HistoryEntity(id: $id, title: $title, content: $content, type: $type, categoryId: $categoryId, price: $price, date: $date)';
+    return 'HistoryEntity(id: $id, title: $title, type: $type, categoryId: $categoryId, price: $price, date: $date)';
   }
 }
