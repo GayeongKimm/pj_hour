@@ -87,7 +87,7 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
     final viewModel = Provider.of<HistoryViewmodel>(context);
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.45,
+      initialChildSize: 0.55,
       minChildSize: 0.3,
       maxChildSize: 0.95,
       expand: false,

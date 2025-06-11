@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 import '../../../component/appbar.dart';
 import '../../../component/default_appbar.dart';
@@ -9,8 +9,20 @@ import '../widget/sell_widget.dart';
 import '../widget/setting_bottom_sheet.dart';
 import '../widget/setting_cell.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
+
+  @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen> {
+  @override
+  void initState() {
+    super.initState();
+    final viewModel = context.read<CategoryViewmodel>();
+    viewModel.getCategoryEntities();
+  }
 
   void _showAddCategoryBottomSheet(BuildContext context) {
     final viewModel = Provider.of<CategoryViewmodel>(context, listen: false);
@@ -71,7 +83,15 @@ class SettingScreen extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: ListView.builder(
+              child: categories.isEmpty
+                  ? Center(
+                child: Text(
+                  '카테고리가 없습니다.\n추가 버튼을 눌러 카테고리를 만들어보세요.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: HourColors.gray500),
+                ),
+              )
+                  : ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
