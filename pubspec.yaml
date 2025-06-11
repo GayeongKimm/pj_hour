@@ -53,6 +53,8 @@ dependencies:
   path: 1.9.0
   get_it: 7.6.4
 
+  another_flushbar: ^1.10.30
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

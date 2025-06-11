@@ -60,6 +60,25 @@ class CategoryViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateCategory({
+    required int id,
+    required String title,
+    required int amount,
+  }) async {
+    final database = await DatabaseManager.getDatabase();
+
+    final updatedCategory = CategoryEntity(
+      id: id,
+      title: title,
+      amount: amount,
+      date: DateTime.now(),
+    );
+
+    await database.categoryDao.updateCategoryEntity(updatedCategory);
+    notifyListeners();
+  }
+
+
   void setIsLoading(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();

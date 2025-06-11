@@ -6,6 +6,7 @@ import 'package:hour/feature/category/item/category_item.dart';
 import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:another_flushbar/flushbar.dart';
 
 import '../../../component/modal_bottom_sheet_container.dart';
 import '../../../component/textfield.dart';
@@ -37,10 +38,16 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
     super.initState();
 
     if (widget.viewModel.isEditing && widget.viewModel.selectedCategory != null) {
-      _titleControllers.add(TextEditingController(text: widget.viewModel.selectedCategory!.title));
-      _amountControllers.add(TextEditingController(text: widget.viewModel.selectedCategory!.amount.toString()));
+      _titleControllers.add(
+        TextEditingController(
+            text: widget.viewModel.selectedCategory!.title
+      ),);
+      _amountControllers.add(
+          TextEditingController(
+              text: widget.viewModel.selectedCategory!.amount.toString()
+          ));
     } else {
-      _addNewCategoryField(); // 기본 한 줄
+      _addNewCategoryField();
     }
   }
 
@@ -52,12 +59,15 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
     });
   }
 
-  void _clearFields() {
-    setState(() {
-      _titleControllers.clear();
-      _amountControllers.clear();
-      _addNewCategoryField();
-    });
+  void _showFlushbar(String message) {
+    Flushbar(
+      message: message,
+      duration: const Duration(seconds: 2),
+      backgroundColor: HourColors.red,
+      flushbarPosition: FlushbarPosition.TOP,
+      margin: const EdgeInsets.all(16),
+      borderRadius: BorderRadius.circular(8),
+    ).show(context);
   }
 
   @override
@@ -109,7 +119,6 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                     },
                   )),
 
-                // 동적으로 입력칸 생성
                 ...List.generate(_titleControllers.length, (index) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,10 +139,14 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                               color: HourColors.staticWhite
                           ),
                           hintText: '금액을 입력해주세요',
-                          hintStyle: HourStyles.label1.copyWith(color: HourColors.gray500),
+                          hintStyle: HourStyles.label1.copyWith(
+                              color: HourColors.gray500
+                          ),
                           border: InputBorder.none,
                         ),
-                        style: HourStyles.body2.copyWith(color: HourColors.staticWhite),
+                        style: HourStyles.body2.copyWith(
+                            color: HourColors.staticWhite
+                        ),
                         onChanged: (value) {
                           String rawValue = value.replaceAll(',', '');
                           final int? intValue = int.tryParse(rawValue);
@@ -142,7 +155,9 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                           if (formatted != value) {
                             _amountControllers[index].value = TextEditingValue(
                               text: formatted,
-                              selection: TextSelection.collapsed(offset: formatted.length),
+                              selection: TextSelection.collapsed(
+                                  offset: formatted.length
+                              ),
                             );
                           }
                         },
@@ -175,46 +190,86 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                 ),
                 const SizedBox(height: 24),
 
-                viewModel.isLoading
-                    ? const Center(child: CircularProgressIndicator(color: HourColors.orange500))
-                    : ElevatedButton(
-                  onPressed: () async {
-                    if (widget.viewModel.isEditing && widget.viewModel.selectedCategory != null) {
-                      final title = _titleControllers[0].text.trim();
-                      final amount = int.tryParse(_amountControllers[0].text.replaceAll(',', '')) ?? 0;
-                      if (title.isNotEmpty && amount > 0) {
-                        // TODO: updateCategory 메서드 추가 필요
-                        print('업데이트 필요: ${title}, ${amount}');
-                      }
-                      Navigator.of(context).pop();
+                viewModel.isLoading ? const Center(
+                    child: CircularProgressIndicator(color: HourColors.orange500))
+                    : ElevatedButton(onPressed: () async {
+                  if (widget.viewModel.isEditing && widget.viewModel.selectedCategory != null) {
+                    final title = _titleControllers[0].text.trim();
+                    final amount = int.tryParse(_amountControllers[0].text.replaceAll(',', '')) ?? 0;
+
+                    if (title.isEmpty || amount <= 0) {
+                      _showFlushbar("카테고리 이름과 금액을 올바르게 입력해주세요.");
                       return;
                     }
 
-                    for (int i = 0; i < _titleControllers.length; i++) {
-                      final title = _titleControllers[i].text.trim();
-                      final raw = _amountControllers[i].text.replaceAll(',', '');
-                      final amount = int.tryParse(raw) ?? 0;
-
-                      if (title.isEmpty || amount <= 0) continue;
-
-                      await viewModel.addCategory(
+                    try {
+                      viewModel.setIsLoading(true);
+                      await viewModel.updateCategory(
+                        id: widget.viewModel.selectedCategory!.id!,
                         title: title,
                         amount: amount,
-                        date: DateTime.now(),
                       );
-                    }
 
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("카테고리가 저장되었습니다.")),
+                      if (context.mounted) {
+                        Navigator.of(context).pop();
+                        Flushbar(
+                          message: "카테고리가 수정되었습니다.",
+                          duration: const Duration(seconds: 2),
+                          backgroundColor: HourColors.green,
+                          flushbarPosition: FlushbarPosition.TOP,
+                          margin: const EdgeInsets.all(16),
+                          borderRadius: BorderRadius.circular(8),
+                        ).show(context);
+                      }
+                    } catch (e) {
+                      _showFlushbar("수정 중 오류 발생: $e");
+                    } finally {
+                      viewModel.setIsLoading(false);
+                    }
+                    return;
+                  }
+
+                  bool hasSaved = false;
+
+                  for (int i = 0; i < _titleControllers.length; i++) {
+                    final title = _titleControllers[i].text.trim();
+                    final raw = _amountControllers[i].text.replaceAll(',', '');
+                    final amount = int.tryParse(raw) ?? 0;
+
+                    if (title.isEmpty || amount <= 0) continue;
+                    await viewModel.addCategory(
+                      title: title,
+                      amount: amount,
+                      date: DateTime.now(),
                     );
-                  },
+                    hasSaved = true;
+                  }
+
+                  if (hasSaved) {
+                    if (context.mounted) {
+                      Navigator.of(context).pop();
+                      Flushbar(
+                        message: "카테고리가 저장되었습니다.",
+                        duration: const Duration(seconds: 2),
+                        backgroundColor: HourColors.green,
+                        flushbarPosition: FlushbarPosition.TOP,
+                        margin: const EdgeInsets.all(16),
+                        borderRadius: BorderRadius.circular(8),
+                      ).show(context);
+                    }
+                  } else {
+                    _showFlushbar("카테고리 이름과 금액을 입력해주세요.");
+                  }
+                },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: HourColors.orange500,
+                    backgroundColor: HourColors.primary300,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text("저장하기", style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
+                  child: Text(
+                      "저장하기", style: HourStyles.label1.copyWith(
+                      color: HourColors.staticWhite
+                  )),
                 ),
                 const SizedBox(height: 8),
               ],
