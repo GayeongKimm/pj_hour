@@ -26,6 +26,9 @@ class _SettingScreenState extends State<SettingScreen> {
 
   void _showAddCategoryBottomSheet(BuildContext context) {
     final viewModel = Provider.of<CategoryViewmodel>(context, listen: false);
+
+    viewModel.clearEditingState();
+
     showModalBottomSheet(
       context: context,
       backgroundColor: HourColors.gray800,
@@ -84,7 +87,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ),
             Expanded(
               child: categories.isEmpty
-                  ? Center(
+                  ? const Center(
                 child: Text(
                   '카테고리가 없습니다.\n추가 버튼을 눌러 카테고리를 만들어보세요.',
                   textAlign: TextAlign.center,
@@ -99,8 +102,28 @@ class _SettingScreenState extends State<SettingScreen> {
                   return CategoryCell(
                     title: category.title,
                     amount: category.amount,
+                    onDelete: () {
+                      categoryViewModel.removeEntity(category.id!);
+                    },
+                    onEdit: () {
+                      categoryViewModel.setEditingCategory(category);
+
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: HourColors.gray800,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        isScrollControlled: true,
+                        builder: (_) => SettingBottomSheet(
+                          context: context,
+                          viewModel: categoryViewModel,
+                        ),
+                      );
+                    },
                   );
                 },
+
               ),
             ),
           ],

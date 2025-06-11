@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../../component/theme/color.dart';
 
@@ -22,6 +23,9 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final formattedAmount = NumberFormat.decimalPattern().format(amount);
+    final formattedDate = DateFormat.yMMMd().format(date);
+
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -38,53 +42,50 @@ class CategoryItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    // children: [
-                    //   Text(
-                    //       title,
-                    //       style: HourStyles.body1.copyWith(
-                    //           color: HourColors.gray800
-                    //       )
-                    //   ),
-                    //   const Spacer(),
-                    //   IconButton(
-                    //     icon: const Icon(Icons.delete_outline),
-                    //     onPressed: () {
-                    //       Navigator.pop(context);
-                    //       onTrashClick();
-                    //     },
-                    //   ),
-                    // ],
+                    children: [
+                      Expanded(
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete_outline, color: Colors.red),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          onTrashClick();
+                        },
+                      ),
+                    ],
                   ),
-                  // const SizedBox(height: 10),
-                  // Text(
-                  //   content,
-                  //   style: HourStyles.label1.copyWith(
-                  //       color: HourColors.gray700
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 10),
-                  // Text(
-                  //   '금액: $price원',
-                  //   style: const TextStyle(fontSize: 16),
-                  // ),
-                  // const SizedBox(height: 6),
-                  // Text(
-                  //   '날짜: ${DateFormat.yMMMd().format(date)}',
-                  //   style: HourStyles.label1.copyWith(
-                  //       color: HourColors.gray800
-                  //   ),
-                  // ),
+                  const SizedBox(height: 10),
+                  Text(
+                    '금액: ₩ $formattedAmount',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    '날짜: $formattedDate',
+                    style: TextStyle(fontSize: 14, color: Colors.white70),
+                  ),
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        // onClickCreate();
+                        onClickCreate();
                       },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: HourColors.orange500,
+                      ),
                       child: const Text('수정하기'),
                     ),
-                  )
+                  ),
                 ],
               ),
             );
@@ -101,22 +102,22 @@ class CategoryItem extends StatelessWidget {
             BoxShadow(color: HourColors.gray500, blurRadius: 5),
           ],
         ),
-        // child: Row(
-        //   children: [
-        //     Icon(
-        //       type == HistoryType.INCOME ? Icons.arrow_downward : Icons.arrow_upward,
-        //       color: type == HistoryType.INCOME ? Colors.green : Colors.red,
-        //     ),
-        //     const SizedBox(width: 12),
-        //     Expanded(
-        //       child: Text(
-        //         title,
-        //         style: const TextStyle(fontSize: 16),
-        //       ),
-        //     ),
-        //     Text('$price원'),
-      //     ],
-      //   ),
+        child: Row(
+          children: [
+            const Icon(Icons.folder, color: Colors.orange),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+            Text(
+              '₩ $formattedAmount',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }

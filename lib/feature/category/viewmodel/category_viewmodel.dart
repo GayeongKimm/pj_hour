@@ -8,11 +8,25 @@ import '../../../local/database_manager.dart';
 class CategoryViewmodel with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+  bool isEditing = false;
+  CategoryEntity? selectedCategory;
 
   List<CategoryEntity> _categoryEntities = List.empty();
   List<CategoryEntity> get categoryEntities => _categoryEntities;
 
   StreamSubscription<List<CategoryEntity>>? _categoryStreamSubscription;
+
+  void clearEditingState() {
+    isEditing = false;
+    selectedCategory = null;
+    notifyListeners();
+  }
+
+  void setEditingCategory(CategoryEntity category) {
+    isEditing = true;
+    selectedCategory = category;
+    notifyListeners();
+  }
 
   void getCategoryEntities() async {
     final database = await DatabaseManager.getDatabase();

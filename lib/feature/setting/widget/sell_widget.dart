@@ -5,11 +5,15 @@ import 'package:hour/component/theme/style.dart';
 class CategoryCell extends StatelessWidget {
   final String title;
   final int amount;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const CategoryCell({
     super.key,
     required this.title,
     required this.amount,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
@@ -23,6 +27,7 @@ class CategoryCell extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // 왼쪽: 제목 및 금액
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,20 +48,47 @@ class CategoryCell extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    const SizedBox(width: 4),
+                    Text(
+                      amount.toString().replaceAllMapped(
+                        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                            (m) => '${m[1]},',
+                      ),
+                      style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
-          Text(
-            amount.toString().replaceAllMapped(
-                RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-                    (m) => '${m[1]},'
+
+          // 오른쪽: 점 3개 메뉴 버튼
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: HourColors.gray500),
+            color: HourColors.gray700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            style: HourStyles.label2.copyWith(
-              color: HourColors.staticWhite,
-              fontWeight: FontWeight.bold,
-            ),
+            onSelected: (value) {
+              if (value == 'edit') {
+                onEdit();
+              } else if (value == 'delete') {
+                onDelete();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: 'edit',
+                child: Text('수정', style: TextStyle(color: HourColors.staticWhite)),
+              ),
+              const PopupMenuItem(
+                value: 'delete',
+                child: Text('삭제', style: TextStyle(color: HourColors.staticWhite)),
+              ),
+            ],
           ),
         ],
       ),

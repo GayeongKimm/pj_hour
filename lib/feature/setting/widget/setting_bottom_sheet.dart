@@ -25,22 +25,56 @@ class SettingBottomSheet extends StatefulWidget {
 }
 
 class _SettingBottomSheetState extends State<SettingBottomSheet> {
-  final TextEditingController _titleTextFieldController = TextEditingController();
-  final TextEditingController _priceTextFieldController = TextEditingController();
   final NumberFormat _formatter = NumberFormat.decimalPattern();
 
-  bool isExpenseSelected = true;
+  List<TextEditingController> _titleControllers = [];
+  List<TextEditingController> _amountControllers = [];
+
+  bool isCreatingMultiple = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.viewModel.isEditing && widget.viewModel.selectedCategory != null) {
+      _titleControllers.add(TextEditingController(text: widget.viewModel.selectedCategory!.title));
+      _amountControllers.add(TextEditingController(text: widget.viewModel.selectedCategory!.amount.toString()));
+    } else {
+      _addNewCategoryField(); // 기본 한 줄
+    }
+  }
+
+  void _addNewCategoryField() {
+    setState(() {
+      _titleControllers.add(TextEditingController());
+      _amountControllers.add(TextEditingController());
+      isCreatingMultiple = true;
+    });
+  }
+
+  void _clearFields() {
+    setState(() {
+      _titleControllers.clear();
+      _amountControllers.clear();
+      _addNewCategoryField();
+    });
+  }
 
   @override
   void dispose() {
-    _titleTextFieldController.dispose();
-    _priceTextFieldController.dispose();
+    for (final c in _titleControllers) {
+      c.dispose();
+    }
+    for (final c in _amountControllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<CategoryViewmodel>(context);
+
     return DraggableScrollableSheet(
       initialChildSize: 0.45,
       minChildSize: 0.3,
@@ -61,61 +95,66 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                ...viewModel.categoryEntities.map((data) => CategoryItem(
-                  id: data.id,
-                  title: data.title,
-                  amount: data.amount,
-                  date: data.date,
-                  onTrashClick: () => viewModel.removeEntity(data.id ?? 0),
-                  onClickCreate: () => Navigator.pop(context),
-                )),
-                const SizedBox(height: 16),
-                HourTextField(
-                  labelText: "카테고리 이름",
-                  hintText: "카테고리 이름을 입력해주세요.",
-                  controller: _titleTextFieldController,
-                ),
-                const SizedBox(height: 12),
-                TextField(
-                  controller: _priceTextFieldController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: InputDecoration(
-                    prefixText: '₩ ',
-                    prefixStyle: HourStyles.label1.copyWith(
-                        color: HourColors.staticWhite
-                    ),
-                    hintText: '금액을 입력해주세요',
-                    hintStyle: HourStyles.label1.copyWith(
-                        color: HourColors.gray500
-                    ),
-                    border: InputBorder.none,
-                  ),
-                  style: HourStyles.body2.copyWith(
-                      color: HourColors.staticWhite
-                  ),
-                  onChanged: (value) {
-                    String rawValue = value.replaceAll(',', '');
-                    if (rawValue.isEmpty) return;
-                    final int? intValue = int.tryParse(rawValue);
-                    if (intValue == null) return;
-                    String formatted = _formatter.format(intValue);
-                    if (formatted != value) {
-                      _priceTextFieldController.value = TextEditingValue(
-                        text: formatted,
-                        selection: TextSelection.collapsed(
-                            offset: formatted.length
+
+                if (!isCreatingMultiple && !widget.viewModel.isEditing)
+                  ...viewModel.categoryEntities.map((data) => CategoryItem(
+                    id: data.id,
+                    title: data.title,
+                    amount: data.amount,
+                    date: data.date,
+                    onTrashClick: () => viewModel.removeEntity(data.id ?? 0),
+                    onClickCreate: () {
+                      viewModel.setEditingCategory(data);
+                      Navigator.pop(context);
+                    },
+                  )),
+
+                // 동적으로 입력칸 생성
+                ...List.generate(_titleControllers.length, (index) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      HourTextField(
+                        labelText: "카테고리 이름",
+                        hintText: "카테고리 이름을 입력해주세요.",
+                        controller: _titleControllers[index],
+                      ),
+                      const SizedBox(height: 12),
+                      TextField(
+                        controller: _amountControllers[index],
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        decoration: InputDecoration(
+                          prefixText: '₩ ',
+                          prefixStyle: HourStyles.label1.copyWith(
+                              color: HourColors.staticWhite
+                          ),
+                          hintText: '금액을 입력해주세요',
+                          hintStyle: HourStyles.label1.copyWith(color: HourColors.gray500),
+                          border: InputBorder.none,
                         ),
-                      );
-                    }
-                  },
-                ),
-                const SizedBox(height: 20),
+                        style: HourStyles.body2.copyWith(color: HourColors.staticWhite),
+                        onChanged: (value) {
+                          String rawValue = value.replaceAll(',', '');
+                          final int? intValue = int.tryParse(rawValue);
+                          if (intValue == null) return;
+                          String formatted = _formatter.format(intValue);
+                          if (formatted != value) {
+                            _amountControllers[index].value = TextEditingValue(
+                              text: formatted,
+                              selection: TextSelection.collapsed(offset: formatted.length),
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  );
+                }),
+
+                const SizedBox(height: 12),
                 GestureDetector(
-                  onTap: () {
-                    _titleTextFieldController.clear();
-                    _priceTextFieldController.clear();
-                  },
+                  onTap: _addNewCategoryField,
                   child: Row(
                     children: [
                       Image.asset(
@@ -134,72 +173,48 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
-                viewModel.isLoading ? const Center(
-                  child: CircularProgressIndicator(
-                    color: HourColors.orange500,
-                  ),
-                ) : ElevatedButton(
-                  onPressed: () async {
-                    final title = _titleTextFieldController.text.trim();
-                    final rawAmount = _priceTextFieldController.text.replaceAll(',', '');
-                    final amount = int.tryParse(rawAmount) ?? 0;
+                const SizedBox(height: 24),
 
-                    if (title.isEmpty || amount <= 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text("카테고리 이름과 금액을 올바르게 입력해주세요.")
-                        ),
-                      );
+                viewModel.isLoading
+                    ? const Center(child: CircularProgressIndicator(color: HourColors.orange500))
+                    : ElevatedButton(
+                  onPressed: () async {
+                    if (widget.viewModel.isEditing && widget.viewModel.selectedCategory != null) {
+                      final title = _titleControllers[0].text.trim();
+                      final amount = int.tryParse(_amountControllers[0].text.replaceAll(',', '')) ?? 0;
+                      if (title.isNotEmpty && amount > 0) {
+                        // TODO: updateCategory 메서드 추가 필요
+                        print('업데이트 필요: ${title}, ${amount}');
+                      }
+                      Navigator.of(context).pop();
                       return;
                     }
-                    try {
-                      widget.viewModel.setIsLoading(true);
-                      await widget.viewModel.addCategory(
+
+                    for (int i = 0; i < _titleControllers.length; i++) {
+                      final title = _titleControllers[i].text.trim();
+                      final raw = _amountControllers[i].text.replaceAll(',', '');
+                      final amount = int.tryParse(raw) ?? 0;
+
+                      if (title.isEmpty || amount <= 0) continue;
+
+                      await viewModel.addCategory(
                         title: title,
                         amount: amount,
                         date: DateTime.now(),
                       );
-                      _titleTextFieldController.clear();
-                      _priceTextFieldController.clear();
-                      if (context.mounted) {
-                        Navigator.of(context).pop();
-                      }
-                      Future.delayed(
-                          const Duration(milliseconds: 300), () {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("저장되었습니다")
-                            ),
-                          );
-                        }
-                      }
-                      );
-                    } catch (e) {
-                      print('$e');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text("저장 중 오류 발생: $e")
-                        ),
-                      );
-                    } finally {
-                      widget.viewModel.setIsLoading(false);
                     }
+
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("카테고리가 저장되었습니다.")),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: HourColors.orange500,
                     padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text(
-                    "저장하기",
-                    style: HourStyles.label1.copyWith(
-                        color: HourColors.staticWhite
-                    ),
-                  ),
+                  child: Text("저장하기", style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
                 ),
                 const SizedBox(height: 8),
               ],
