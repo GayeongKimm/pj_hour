@@ -41,7 +41,7 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
       _titleControllers.add(
         TextEditingController(
             text: widget.viewModel.selectedCategory!.title
-      ),);
+        ),);
       _amountControllers.add(
           TextEditingController(
               text: widget.viewModel.selectedCategory!.amount.toString()
@@ -108,17 +108,16 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
 
                 if (!isCreatingMultiple && !widget.viewModel.isEditing)
                   ...viewModel.categoryEntities.map((data) => CategoryItem(
-                    id: data.id,
+                    // id: data.id,
                     title: data.title,
                     amount: data.amount,
-                    date: data.date,
-                    onTrashClick: () => viewModel.removeEntity(data.id ?? 0),
-                    onClickCreate: () {
+                    // date: data.date,
+                    onDelete: () => viewModel.removeEntity(data.id ?? 0),
+                    onEdit: () {
                       viewModel.setEditingCategory(data);
                       Navigator.pop(context);
                     },
                   )),
-
                 ...List.generate(_titleControllers.length, (index) {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

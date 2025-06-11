@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../../component/appbar.dart';
 import '../../../component/default_appbar.dart';
 import '../../../component/theme/color.dart';
-import '../widget/sell_widget.dart';
+import '../../category/item/category_item.dart';
 import '../widget/setting_bottom_sheet.dart';
 import '../widget/setting_cell.dart';
 
@@ -69,10 +69,10 @@ class _SettingScreenState extends State<SettingScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    SettingCell(
-                      title: "이번달 예산",
-                      budget: 200000,
-                    ),
+                    // SettingCell(
+                    //   title: "이번달 예산",
+                    //   budget: 200000,
+                    // ),
                     const SizedBox(height: 24),
                   ],
                 ),
@@ -91,7 +91,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 child: Text(
                   '카테고리가 없습니다.\n추가 버튼을 눌러 카테고리를 만들어보세요.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: HourColors.gray500),
+                  style: TextStyle(
+                      color: HourColors.gray500),
                 ),
               )
                   : ListView.builder(
@@ -99,7 +100,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 itemCount: categories.length,
                 itemBuilder: (context, index) {
                   final category = categories[index];
-                  return CategoryCell(
+                  return CategoryItem(
                     title: category.title,
                     amount: category.amount,
                     onDelete: () {
@@ -107,12 +108,13 @@ class _SettingScreenState extends State<SettingScreen> {
                     },
                     onEdit: () {
                       categoryViewModel.setEditingCategory(category);
-
                       showModalBottomSheet(
                         context: context,
                         backgroundColor: HourColors.gray800,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20)
+                          ),
                         ),
                         isScrollControlled: true,
                         builder: (_) => SettingBottomSheet(
@@ -123,7 +125,6 @@ class _SettingScreenState extends State<SettingScreen> {
                     },
                   );
                 },
-
               ),
             ),
           ],

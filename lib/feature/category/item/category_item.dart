@@ -1,123 +1,104 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../../../component/theme/color.dart';
+import '../../../component/theme/style.dart';
 
 class CategoryItem extends StatelessWidget {
-  final int? id;
   final String title;
   final int amount;
-  final DateTime date;
-  final Function() onTrashClick;
-  final Function() onClickCreate;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
   const CategoryItem({
     super.key,
-    this.id,
     required this.title,
     required this.amount,
-    required this.date,
-    required this.onTrashClick,
-    required this.onClickCreate,
+    required this.onDelete,
+    required this.onEdit,
   });
 
   @override
   Widget build(BuildContext context) {
-    final formattedAmount = NumberFormat.decimalPattern().format(amount);
-    final formattedDate = DateFormat.yMMMd().format(date);
-
-    return GestureDetector(
-      onTap: () {
-        showModalBottomSheet(
-          context: context,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          backgroundColor: HourColors.staticBlack,
-          builder: (context) {
-            return Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          title,
-                          style: TextStyle(
-                            fontSize: 18,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete_outline, color: Colors.red),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          onTrashClick();
-                        },
-                      ),
-                    ],
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: HourColors.gray800,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: HourStyles.body2.copyWith(
+                    color: HourColors.staticWhite,
                   ),
-                  const SizedBox(height: 10),
-                  Text(
-                    '금액: ₩ $formattedAmount',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    '날짜: $formattedDate',
-                    style: TextStyle(fontSize: 14, color: Colors.white70),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                        onClickCreate();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: HourColors.orange500,
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Text(
+                      "₩",
+                      style: HourStyles.label2.copyWith(
+                        color: HourColors.primary300,
+                        fontWeight: FontWeight.bold,
                       ),
-                      child: const Text('수정하기'),
                     ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        margin: const EdgeInsets.symmetric(vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(color: HourColors.gray500, blurRadius: 5),
-          ],
-        ),
-        child: Row(
-          children: [
-            const Icon(Icons.folder, color: Colors.orange),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(fontSize: 16),
-              ),
+                    const SizedBox(width: 4),
+                    Text(
+                      amount.toString().replaceAllMapped(
+                        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                            (m) => '${m[1]},',
+                      ),
+                      style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Text(
-              '₩ $formattedAmount',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+
+          PopupMenuButton<String>(
+            icon: Image.asset(
+              "assets/images/ic_more.png",
+              width: 20,
+              height: 20,
+              color: HourColors.gray500,
             ),
-          ],
-        ),
+            color: HourColors.gray700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            onSelected: (value) {
+              if (value == 'edit') {
+                onEdit();
+              } else if (value == 'delete') {
+                onDelete();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(
+                value: 'edit',
+                child: Text('수정', style: TextStyle(
+                    color: HourColors.staticWhite)
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'delete',
+                child: Text('삭제', style: TextStyle(
+                    color: HourColors.staticWhite)
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
