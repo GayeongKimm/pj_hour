@@ -38,6 +38,25 @@ class _SettingScreenState extends State<SettingScreen> {
         _currentMonthEntity = month;
       });
     });
+    monthViewModel.addListener(_updateCurrentMonth);
+  }
+
+  void _updateCurrentMonth() {
+    final monthViewModel = context.read<MonthViewmodel>();
+    final now = DateTime.now();
+    final current = monthViewModel.monthEntities.firstWhere(
+          (e) => e.date.year == now.year && e.date.month == now.month,
+      orElse: () => _currentMonthEntity ?? MonthEntity(amount: 0, date: DateTime(now.year, now.month, 1)),
+    );
+    setState(() {
+      _currentMonthEntity = current;
+    });
+  }
+
+  @override
+  void dispose() {
+    context.read<MonthViewmodel>().removeListener(_updateCurrentMonth);
+    super.dispose();
   }
 
   void _showMonthBottomSheet(BuildContext context, {MonthEntity? monthEntity}) {
@@ -86,6 +105,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
     final categoryViewModel = context.watch<CategoryViewmodel>();
     final categories = categoryViewModel.categoryEntities;
+
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -101,8 +121,7 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Container(
                 color: HourColors.staticBlack,
                 margin: const EdgeInsets.symmetric(horizontal: 16),
-                child:
-                Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
@@ -111,8 +130,8 @@ class _SettingScreenState extends State<SettingScreen> {
                       amount: _currentMonthEntity?.amount ?? 0,
                       onEdit: () {
                         _showMonthBottomSheet(
-                            context,
-                            monthEntity: _currentMonthEntity
+                          context,
+                          monthEntity: _currentMonthEntity,
                         );
                       },
                     ),
@@ -134,8 +153,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 child: Text(
                   '카테고리가 없습니다.\n추가 버튼을 눌러 카테고리를 만들어보세요.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: HourColors.gray500),
+                  style: TextStyle(color: HourColors.gray500),
                 ),
               )
                   : ListView.builder(
@@ -155,9 +173,7 @@ class _SettingScreenState extends State<SettingScreen> {
                         context: context,
                         backgroundColor: HourColors.gray800,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20)
-                          ),
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                         ),
                         isScrollControlled: true,
                         builder: (_) => SettingBottomSheet(

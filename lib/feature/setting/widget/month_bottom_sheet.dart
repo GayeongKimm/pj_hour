@@ -66,6 +66,7 @@ class _MonthBottomSheetState extends State<MonthBottomSheet> {
 
       widget.viewModel.setEditingMonth(updated);
     }
+    widget.viewModel.setIsLoading(false);
 
     if (!mounted) return;
     Navigator.of(context).pop();
@@ -118,7 +119,6 @@ class _MonthBottomSheetState extends State<MonthBottomSheet> {
         child: CircularProgressIndicator(color: HourColors.orange500),
       );
     }
-
     return ElevatedButton(
       onPressed: _onSubmit,
       style: ElevatedButton.styleFrom(
@@ -128,7 +128,9 @@ class _MonthBottomSheetState extends State<MonthBottomSheet> {
       ),
       child: Text(
         "저장하기",
-        style: HourStyles.label1.copyWith(color: HourColors.staticWhite),
+        style: HourStyles.label1.copyWith(
+            color: HourColors.staticWhite
+        ),
       ),
     );
   }
