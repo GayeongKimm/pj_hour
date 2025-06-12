@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
+import 'package:hour/feature/setting/widget/month_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import '../../../component/appbar.dart';
 import '../../../component/default_appbar.dart';
 import '../../../component/theme/color.dart';
+import '../../../local/entity/month_entity.dart';
 import '../../category/item/category_item.dart';
+import '../../month/viewmodel/month_viewmodel.dart';
 import '../widget/setting_bottom_sheet.dart';
 import '../widget/setting_cell.dart';
 
@@ -17,25 +20,56 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  MonthEntity? _currentMonthEntity;
+
   @override
   void initState() {
     super.initState();
-    final viewModel = context.read<CategoryViewmodel>();
-    viewModel.getCategoryEntities();
+
+    final categoryViewModel = context.read<CategoryViewmodel>();
+    categoryViewModel.getCategoryEntities();
+
+    final monthViewModel = context.read<MonthViewmodel>();
+    monthViewModel.getMonthEntities();
+
+    final now = DateTime.now();
+    monthViewModel.findByDate(DateTime(now.year, now.month, 1)).then((month) {
+      setState(() {
+        _currentMonthEntity = month;
+      });
+    });
+  }
+
+  void _showMonthBottomSheet(BuildContext context, {MonthEntity? monthEntity}) {
+    final viewModel = Provider.of<MonthViewmodel>(context, listen: false);
+
+    if (monthEntity != null) {
+      viewModel.setEditingMonth(monthEntity);
+    } else {
+      viewModel.clearEditingState();
+    }
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: HourColors.gray800,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      isScrollControlled: true,
+      builder: (_) => MonthBottomSheet(
+        viewModel: viewModel,
+      ),
+    );
   }
 
   void _showAddCategoryBottomSheet(BuildContext context) {
     final viewModel = Provider.of<CategoryViewmodel>(context, listen: false);
-
     viewModel.clearEditingState();
 
     showModalBottomSheet(
       context: context,
       backgroundColor: HourColors.gray800,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-            top: Radius.circular(20)
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       isScrollControlled: true,
       builder: (_) => SettingBottomSheet(
@@ -47,9 +81,11 @@ class _SettingScreenState extends State<SettingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final monthViewModel = context.watch<MonthViewmodel>();
+    final months = monthViewModel.monthEntities;
+
     final categoryViewModel = context.watch<CategoryViewmodel>();
     final categories = categoryViewModel.categoryEntities;
-
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(60),
@@ -65,14 +101,21 @@ class _SettingScreenState extends State<SettingScreen> {
               child: Container(
                 color: HourColors.staticBlack,
                 margin: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
+                child:
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 20),
-                    // SettingCell(
-                    //   title: "이번달 예산",
-                    //   budget: 200000,
-                    // ),
+                    SettingCell(
+                      title: "이번달 예산",
+                      amount: _currentMonthEntity?.amount ?? 0,
+                      onEdit: () {
+                        _showMonthBottomSheet(
+                            context,
+                            monthEntity: _currentMonthEntity
+                        );
+                      },
+                    ),
                     const SizedBox(height: 24),
                   ],
                 ),

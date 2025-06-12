@@ -3,15 +3,15 @@ import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:intl/intl.dart';
 
-class SettingCell extends StatelessWidget {
+class MonthItem extends StatelessWidget {
 
-  final String title;
+  final DateTime date;
   final int amount;
   final VoidCallback onEdit;
 
-  SettingCell({
+  MonthItem({
     super.key,
-    required this.title,
+    required this.date,
     required this.amount,
     required this.onEdit,
   });
@@ -37,7 +37,7 @@ class SettingCell extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
-                        title,
+                        date.toString(),
                         style: HourStyles.body2.copyWith(
                           color: HourColors.staticWhite,
                         ),
@@ -54,19 +54,15 @@ class SettingCell extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-                        onSelected: (value) {
-                          if (value == 'edit') {
-                            onEdit();
-                          }
-                        },
                         itemBuilder: (BuildContext context) => [
                           const PopupMenuItem(
                             value: 'edit',
-                            child: Text('수정', style: TextStyle(color: HourColors.staticWhite)),
+                            child: Text('수정', style: TextStyle(
+                                color: HourColors.staticWhite)
+                            ),
                           ),
                         ],
                       ),
-
                     ],
                   ),
                   SizedBox(height: 8),

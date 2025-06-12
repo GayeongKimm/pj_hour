@@ -1,7 +1,7 @@
 import 'package:floor/floor.dart';
 
-@Entity(tableName: "category")
-class CategoryEntity {
+@Entity(tableName: "month")
+class MonthEntity {
 
   @PrimaryKey(autoGenerate: true)
   final int? id;
@@ -10,7 +10,7 @@ class CategoryEntity {
 
   final DateTime date;
 
-  CategoryEntity({
+  MonthEntity({
     this.id,
     required this.amount,
     required this.date
@@ -19,7 +19,7 @@ class CategoryEntity {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-          other is CategoryEntity &&
+          other is MonthEntity &&
               runtimeType == other.runtimeType &&
               id == other.id &&
               amount == other.amount &&
@@ -33,16 +33,16 @@ class CategoryEntity {
 
   @override
   String toString() {
-    return 'CategoryEntity(id: $id, amount: $amount, date: $date)';
+    return 'MonthEntity(id: $id, amount: $amount, date: $date)';
   }
 
-  factory CategoryEntity.forMonth({
+  factory MonthEntity.forMonth({
     int? id,
     required int amount,
     required DateTime date,
   }) {
     final firstDayOfMonth = DateTime(date.year, date.month, 1);
-    return CategoryEntity(
+    return MonthEntity(
       id: id,
       amount: amount,
       date: firstDayOfMonth,

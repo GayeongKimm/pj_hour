@@ -76,6 +76,8 @@ class _$HourDatabase extends HourDatabase {
 
   HistoryDao? _historyDaoInstance;
 
+  MonthDao? _monthDaoInstance;
+
   Future<sqflite.Database> open(
     String path,
     List<Migration> migrations, [
@@ -101,6 +103,8 @@ class _$HourDatabase extends HourDatabase {
             'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `type` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `date` TEXT NOT NULL)');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `month` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -116,6 +120,11 @@ class _$HourDatabase extends HourDatabase {
   @override
   HistoryDao get historyDao {
     return _historyDaoInstance ??= _$HistoryDao(database, changeListener);
+  }
+
+  @override
+  MonthDao get monthDao {
+    return _monthDaoInstance ??= _$MonthDao(database, changeListener);
   }
 }
 
@@ -209,7 +218,7 @@ class _$CategoryDao extends CategoryDao {
   }
 
   @override
-  Future<void> deleteAllOutEntities() async {
+  Future<void> deleteAllEntities() async {
     await _queryAdapter.queryNoReturn('DELETE FROM note');
   }
 
@@ -333,7 +342,7 @@ class _$HistoryDao extends HistoryDao {
   }
 
   @override
-  Future<void> deleteAllOutEntities() async {
+  Future<void> deleteAllEntities() async {
     await _queryAdapter.queryNoReturn('DELETE FROM note');
   }
 
@@ -352,6 +361,122 @@ class _$HistoryDao extends HistoryDao {
   @override
   Future<void> deleteHistoryEntity(HistoryEntity historyEntity) async {
     await _historyEntityDeletionAdapter.delete(historyEntity);
+  }
+}
+
+class _$MonthDao extends MonthDao {
+  _$MonthDao(
+    this.database,
+    this.changeListener,
+  )   : _queryAdapter = QueryAdapter(database, changeListener),
+        _monthEntityInsertionAdapter = InsertionAdapter(
+            database,
+            'month',
+            (MonthEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'amount': item.amount,
+                  'date': _dateTimeConverter.encode(item.date)
+                },
+            changeListener),
+        _monthEntityUpdateAdapter = UpdateAdapter(
+            database,
+            'month',
+            ['id'],
+            (MonthEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'amount': item.amount,
+                  'date': _dateTimeConverter.encode(item.date)
+                },
+            changeListener),
+        _monthEntityDeletionAdapter = DeletionAdapter(
+            database,
+            'month',
+            ['id'],
+            (MonthEntity item) => <String, Object?>{
+                  'id': item.id,
+                  'amount': item.amount,
+                  'date': _dateTimeConverter.encode(item.date)
+                },
+            changeListener);
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<MonthEntity> _monthEntityInsertionAdapter;
+
+  final UpdateAdapter<MonthEntity> _monthEntityUpdateAdapter;
+
+  final DeletionAdapter<MonthEntity> _monthEntityDeletionAdapter;
+
+  @override
+  Future<MonthEntity?> findOutEntityById(int id) async {
+    return _queryAdapter.query('SELECT * FROM month WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => MonthEntity(
+            id: row['id'] as int?,
+            amount: row['amount'] as int,
+            date: _dateTimeConverter.decode(row['date'] as String)),
+        arguments: [id]);
+  }
+
+  @override
+  Future<List<MonthEntity>> findAllEntities() async {
+    return _queryAdapter.queryList('SELECT * FROM month',
+        mapper: (Map<String, Object?> row) => MonthEntity(
+            id: row['id'] as int?,
+            amount: row['amount'] as int,
+            date: _dateTimeConverter.decode(row['date'] as String)));
+  }
+
+  @override
+  Stream<List<MonthEntity>> findAllEntitiesWithStream() {
+    return _queryAdapter.queryListStream('SELECT * FROM month',
+        mapper: (Map<String, Object?> row) => MonthEntity(
+            id: row['id'] as int?,
+            amount: row['amount'] as int,
+            date: _dateTimeConverter.decode(row['date'] as String)),
+        queryableName: 'month',
+        isView: false);
+  }
+
+  @override
+  Future<void> deleteMonthEntityById(int id) async {
+    await _queryAdapter
+        .queryNoReturn('DELETE FROM month WHERE id = ?1', arguments: [id]);
+  }
+
+  @override
+  Future<MonthEntity?> findByDate(DateTime date) async {
+    return _queryAdapter.query('SELECT * FROM month WHERE date = ?1 LIMIT 1',
+        mapper: (Map<String, Object?> row) => MonthEntity(
+            id: row['id'] as int?,
+            amount: row['amount'] as int,
+            date: _dateTimeConverter.decode(row['date'] as String)),
+        arguments: [_dateTimeConverter.encode(date)]);
+  }
+
+  @override
+  Future<void> deleteAllEntities() async {
+    await _queryAdapter.queryNoReturn('DELETE FROM note');
+  }
+
+  @override
+  Future<void> insertMonthEntity(MonthEntity monthEntity) async {
+    await _monthEntityInsertionAdapter.insert(
+        monthEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateMonthEntity(MonthEntity monthEntity) async {
+    await _monthEntityUpdateAdapter.update(
+        monthEntity, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteMonthEntity(MonthEntity monthEntity) async {
+    await _monthEntityDeletionAdapter.delete(monthEntity);
   }
 }
 

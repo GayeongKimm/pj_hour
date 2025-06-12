@@ -25,7 +25,7 @@ abstract class CategoryDao {
   Future<void> deleteCategoryEntity(CategoryEntity categoryEntity);
 
   @Query("DELETE FROM note")
-  Future<void> deleteAllOutEntities();
+  Future<void> deleteAllEntities();
 
   static const String _tableName = "category";
 }

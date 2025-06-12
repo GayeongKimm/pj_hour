@@ -25,7 +25,7 @@ abstract class HistoryDao {
   Future<void> deleteHistoryEntity(HistoryEntity historyEntity);
 
   @Query("DELETE FROM note")
-  Future<void> deleteAllOutEntities();
+  Future<void> deleteAllEntities();
 
   static const String _tableName = "history";
 }

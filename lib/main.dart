@@ -5,6 +5,7 @@ import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/analytic/view/analytic.dart';
 import 'package:hour/feature/category/viewmodel/category_viewmodel.dart';
 import 'package:hour/feature/home/view/home.dart';
+import 'package:hour/feature/month/viewmodel/month_viewmodel.dart';
 import 'package:hour/feature/root/view/root_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +28,7 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => HistoryViewmodel()),
         ChangeNotifierProvider(create: (_) => CategoryViewmodel()),
-        ChangeNotifierProvider(create: (_) => HistoryCreateViewModel()),
+        ChangeNotifierProvider(create: (_) => MonthViewmodel()),
       ],
       child: MyApp(),
     ),
