@@ -20,8 +20,6 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
-  MonthEntity? _currentMonthEntity;
-
   @override
   void initState() {
     super.initState();
@@ -31,32 +29,14 @@ class _SettingScreenState extends State<SettingScreen> {
 
     final monthViewModel = context.read<MonthViewmodel>();
     monthViewModel.getMonthEntities();
-
-    final now = DateTime.now();
-    monthViewModel.findByDate(DateTime(now.year, now.month, 1)).then((month) {
-      setState(() {
-        _currentMonthEntity = month;
-      });
-    });
-    monthViewModel.addListener(_updateCurrentMonth);
   }
 
-  void _updateCurrentMonth() {
-    final monthViewModel = context.read<MonthViewmodel>();
+  MonthEntity? _getCurrentMonth(MonthViewmodel viewModel) {
     final now = DateTime.now();
-    final current = monthViewModel.monthEntities.firstWhere(
+    return viewModel.monthEntities.firstWhere(
           (e) => e.date.year == now.year && e.date.month == now.month,
-      orElse: () => _currentMonthEntity ?? MonthEntity(amount: 0, date: DateTime(now.year, now.month, 1)),
+      orElse: () => MonthEntity(amount: 0, date: DateTime(now.year, now.month, 1)),
     );
-    setState(() {
-      _currentMonthEntity = current;
-    });
-  }
-
-  @override
-  void dispose() {
-    context.read<MonthViewmodel>().removeListener(_updateCurrentMonth);
-    super.dispose();
   }
 
   void _showMonthBottomSheet(BuildContext context, {MonthEntity? monthEntity}) {
@@ -67,6 +47,7 @@ class _SettingScreenState extends State<SettingScreen> {
     } else {
       viewModel.clearEditingState();
     }
+
     showModalBottomSheet(
       context: context,
       backgroundColor: HourColors.gray800,
@@ -74,9 +55,7 @@ class _SettingScreenState extends State<SettingScreen> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       isScrollControlled: true,
-      builder: (_) => MonthBottomSheet(
-        viewModel: viewModel,
-      ),
+      builder: (_) => MonthBottomSheet(viewModel: viewModel),
     );
   }
 
@@ -101,17 +80,15 @@ class _SettingScreenState extends State<SettingScreen> {
   @override
   Widget build(BuildContext context) {
     final monthViewModel = context.watch<MonthViewmodel>();
-    final months = monthViewModel.monthEntities;
-
     final categoryViewModel = context.watch<CategoryViewmodel>();
+
+    final currentMonth = _getCurrentMonth(monthViewModel);
     final categories = categoryViewModel.categoryEntities;
 
     return Scaffold(
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(60),
-        child: DefaultAppbar(
-          title: '월별 예산 설정',
-        ),
+        child: DefaultAppbar(title: '월별 예산 설정'),
       ),
       backgroundColor: HourColors.staticBlack,
       body: SafeArea(
@@ -127,11 +104,11 @@ class _SettingScreenState extends State<SettingScreen> {
                     const SizedBox(height: 20),
                     SettingCell(
                       title: "이번달 예산",
-                      amount: _currentMonthEntity?.amount ?? 0,
+                      amount: currentMonth?.amount ?? 0,
                       onEdit: () {
                         _showMonthBottomSheet(
                           context,
-                          monthEntity: _currentMonthEntity,
+                          monthEntity: currentMonth,
                         );
                       },
                     ),
