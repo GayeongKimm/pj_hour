@@ -46,32 +46,52 @@ class _MonthBottomSheetState extends State<MonthBottomSheet> {
 
     widget.viewModel.setIsLoading(true);
 
-    final selectedMonth = widget.viewModel.selectedMonth;
-    if (selectedMonth != null) {
-      final updated = MonthEntity(
-        id: selectedMonth.id,
-        amount: amount,
-        date: selectedMonth.date,
-      );
+    try {
+      final now = DateTime.now();
       final db = await DatabaseManager.getDatabase();
-      await db.monthDao.updateMonthEntity(updated);
-      widget.viewModel.getMonthEntities();
 
-      widget.viewModel.setEditingMonth(updated);
-    }
-    widget.viewModel.setIsLoading(false);
+      final selectedMonth = widget.viewModel.selectedMonth;
 
-    if (!mounted) return;
-    Navigator.of(context).pop();
+      if (selectedMonth == null || selectedMonth.id == null) {
+        final newMonth = MonthEntity(
+          id: null,
+          amount: amount,
+          date: DateTime(now.year, now.month, 1),
+        );
+        await db.monthDao.insertMonthEntity(newMonth);
+        widget.viewModel.getMonthEntities();
+        widget.viewModel.setEditingMonth(newMonth);
+      } else {
+        final updated = MonthEntity(
+          id: selectedMonth.id!,
+          amount: amount,
+          date: selectedMonth.date,
+        );
+        await db.monthDao.updateMonthEntity(updated);
+        widget.viewModel.getMonthEntities();
+        widget.viewModel.setEditingMonth(updated);
+      }
 
-    Future.microtask(() {
       if (!mounted) return;
-      FlushbarUtil.show(
+
+      Navigator.of(context).pop();
+
+      Future.delayed(Duration(milliseconds: 100), () {
+        if (!mounted) return;
+        FlushbarUtil.show(
           context,
           "이번달 예산이 저장되었습니다.",
-          color: HourColors.green
-      );
-    });
+          color: HourColors.green,
+        );
+      });
+    } catch (e, st) {
+      print('Error in _onSubmit: $e\n$st');
+      if (mounted) {
+        FlushbarUtil.show(context, "저장 중 오류가 발생했습니다.");
+      }
+    } finally {
+      widget.viewModel.setIsLoading(false);
+    }
   }
 
   void _onAmountChanged(String value) {

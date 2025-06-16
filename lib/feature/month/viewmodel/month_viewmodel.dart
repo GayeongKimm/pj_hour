@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
-import 'package:hour/local/entity/category_entity.dart';
 import 'package:hour/local/entity/month_entity.dart';
 import '../../../local/database_manager.dart';
 
