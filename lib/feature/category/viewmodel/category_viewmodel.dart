@@ -47,13 +47,15 @@ class CategoryViewmodel with ChangeNotifier {
     required String title,
     required int amount,
     required DateTime date,
+    required String icon
   }) async {
     final database = await DatabaseManager.getDatabase();
 
     final newCategory = CategoryEntity(
-      title: title,
-      amount: amount,
-      date: date,
+        title: title,
+        amount: amount,
+        date: date,
+        icon: icon
     );
 
     await database.categoryDao.insertCategoryEntity(newCategory);
@@ -64,6 +66,8 @@ class CategoryViewmodel with ChangeNotifier {
     required int id,
     required String title,
     required int amount,
+    required String icon
+
   }) async {
     final database = await DatabaseManager.getDatabase();
 
@@ -71,6 +75,7 @@ class CategoryViewmodel with ChangeNotifier {
       id: id,
       title: title,
       amount: amount,
+      icon: icon,
       date: DateTime.now(),
     );
 

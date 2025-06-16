@@ -100,7 +100,7 @@ class _$HourDatabase extends HourDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL)');
+            'CREATE TABLE IF NOT EXISTS `category` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `amount` INTEGER NOT NULL, `date` TEXT NOT NULL, `icon` TEXT NOT NULL)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `history` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `title` TEXT NOT NULL, `type` TEXT NOT NULL, `categoryId` INTEGER NOT NULL, `price` INTEGER NOT NULL, `date` TEXT NOT NULL)');
         await database.execute(
@@ -140,7 +140,8 @@ class _$CategoryDao extends CategoryDao {
                   'id': item.id,
                   'title': item.title,
                   'amount': item.amount,
-                  'date': _dateTimeConverter.encode(item.date)
+                  'date': _dateTimeConverter.encode(item.date),
+                  'icon': item.icon
                 },
             changeListener),
         _categoryEntityUpdateAdapter = UpdateAdapter(
@@ -151,7 +152,8 @@ class _$CategoryDao extends CategoryDao {
                   'id': item.id,
                   'title': item.title,
                   'amount': item.amount,
-                  'date': _dateTimeConverter.encode(item.date)
+                  'date': _dateTimeConverter.encode(item.date),
+                  'icon': item.icon
                 },
             changeListener),
         _categoryEntityDeletionAdapter = DeletionAdapter(
@@ -162,7 +164,8 @@ class _$CategoryDao extends CategoryDao {
                   'id': item.id,
                   'title': item.title,
                   'amount': item.amount,
-                  'date': _dateTimeConverter.encode(item.date)
+                  'date': _dateTimeConverter.encode(item.date),
+                  'icon': item.icon
                 },
             changeListener);
 
@@ -185,7 +188,8 @@ class _$CategoryDao extends CategoryDao {
             id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as int,
-            date: _dateTimeConverter.decode(row['date'] as String)),
+            date: _dateTimeConverter.decode(row['date'] as String),
+            icon: row['icon'] as String),
         arguments: [id]);
   }
 
@@ -196,7 +200,8 @@ class _$CategoryDao extends CategoryDao {
             id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as int,
-            date: _dateTimeConverter.decode(row['date'] as String)));
+            date: _dateTimeConverter.decode(row['date'] as String),
+            icon: row['icon'] as String));
   }
 
   @override
@@ -206,7 +211,8 @@ class _$CategoryDao extends CategoryDao {
             id: row['id'] as int?,
             title: row['title'] as String,
             amount: row['amount'] as int,
-            date: _dateTimeConverter.decode(row['date'] as String)),
+            date: _dateTimeConverter.decode(row['date'] as String),
+            icon: row['icon'] as String),
         queryableName: 'category',
         isView: false);
   }

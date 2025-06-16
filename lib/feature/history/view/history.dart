@@ -3,7 +3,6 @@ import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/history/widget/history_calendar.dart';
 import 'package:hour/feature/history/widget/history_spending_cell.dart';
-
 import '../../../component/default_appbar.dart';
 
 class HistoryScreen extends StatefulWidget {
@@ -38,47 +37,25 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     focusedDay: _focusedDay,
                     selectedDay: _selectedDay
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   "사용한 금액",
-                  style:
-                  HourStyles.title1.copyWith(
-                      color: HourColors.staticWhite
+                  style: HourStyles.title1.copyWith(
+                    color: HourColors.staticWhite,
                   ),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Column(
-                  children: [
-                    HistorySpendingCell(
+                  children: List.generate(5, (index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 10.0),
+                      child: HistorySpendingCell(
                         category: "쇼핑",
                         item: "졸업사진 옷",
-                        amount: 200000
-                    ),
-                    SizedBox(height: 10),
-                    HistorySpendingCell(
-                        category: "쇼핑",
-                        item: "졸업사진 옷",
-                        amount: 200000
-                    ),
-                    SizedBox(height: 10),
-                    HistorySpendingCell(
-                        category: "쇼핑",
-                        item: "졸업사진 옷",
-                        amount: 200000
-                    ),
-                    SizedBox(height: 10),
-                    HistorySpendingCell(
-                        category: "쇼핑",
-                        item: "졸업사진 옷",
-                        amount: 200000
-                    ),
-                    SizedBox(height: 10),
-                    HistorySpendingCell(
-                        category: "쇼핑",
-                        item: "졸업사진 옷",
-                        amount: 200000
-                    ),
-                  ],
+                        amount: 200000,
+                      ),
+                    );
+                  }),
                 ),
               ],
             ),

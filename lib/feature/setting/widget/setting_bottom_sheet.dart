@@ -30,8 +30,53 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
   final NumberFormat _formatter = NumberFormat.decimalPattern();
   final List<TextEditingController> _titleControllers = [];
   final List<TextEditingController> _amountControllers = [];
+  final List<String> _selectedIcons = [];
 
   bool isCreatingMultiple = false;
+
+  final List<String> availableIcons = [
+    'assets/images/ic_food.png',
+    'assets/images/ic_book.png',
+    'assets/images/ic_bus.png',
+    'assets/images/ic_game.png',
+    'assets/images/ic_gift.png',
+    'assets/images/ic_shopping.png',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = Provider.of<CategoryViewmodel>(context);
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.55,
+      minChildSize: 0.3,
+      maxChildSize: 0.95,
+      expand: false,
+      builder: (context, scrollController) {
+        return ModalBottomSheetContainer(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              controller: scrollController,
+              children: [
+                const SizedBox(height: 12),
+                Text("카테고리 생성하기", style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
+                const SizedBox(height: 12),
+                if (!isCreatingMultiple && !widget.viewModel.isEditing)
+                  buildExistingCategoryList(viewModel),
+                buildCategoryFields(),
+                const SizedBox(height: 12),
+                buildAddButton(),
+                const SizedBox(height: 24),
+                buildSaveButton(viewModel),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -40,10 +85,12 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
     if (widget.viewModel.isEditing && selected != null) {
       _titleControllers.add(TextEditingController(text: selected.title));
       _amountControllers.add(TextEditingController(text: selected.amount.toString()));
+      _selectedIcons.add(selected.icon ?? availableIcons.first);
     } else {
       setState(() {
         _titleControllers.add(TextEditingController());
         _amountControllers.add(TextEditingController());
+        _selectedIcons.add(availableIcons.first);
         isCreatingMultiple = true;
       });
     }
@@ -53,14 +100,15 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
     setState(() {
       _titleControllers.add(TextEditingController());
       _amountControllers.add(TextEditingController());
+      _selectedIcons.add(availableIcons.first);
       isCreatingMultiple = true;
     });
   }
 
   Future<void> _handleEditCategory() async {
     final title = _titleControllers[0].text.trim();
-    final amount = int.tryParse(
-        _amountControllers[0].text.replaceAll(',', '')) ?? 0;
+    final amount = int.tryParse(_amountControllers[0].text.replaceAll(',', '')) ?? 0;
+    final icon = _selectedIcons[0];
 
     if (title.isEmpty || amount <= 0) {
       FlushbarUtil.show(context, "카테고리 이름과 금액을 올바르게 입력해주세요.");
@@ -73,6 +121,7 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
         id: widget.viewModel.selectedCategory!.id!,
         title: title,
         amount: amount,
+        icon: icon,
       );
       if (context.mounted) {
         Navigator.of(context).pop();
@@ -91,12 +140,14 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
     for (int i = 0; i < _titleControllers.length; i++) {
       final title = _titleControllers[i].text.trim();
       final amount = int.tryParse(_amountControllers[i].text.replaceAll(',', '')) ?? 0;
+      final icon = _selectedIcons[i];
 
       if (title.isEmpty || amount <= 0) continue;
 
       await widget.viewModel.addCategory(
         title: title,
         amount: amount,
+        icon: icon,
         date: DateTime.now(),
       );
       hasSaved = true;
@@ -149,6 +200,29 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                 }
               },
             ),
+            const SizedBox(height: 12),
+            Text("아이콘을 선택해 주세요",
+              style: HourStyles.label1.copyWith(
+                  color: HourColors.staticWhite
+              )),
+            DropdownButton<String>(
+              dropdownColor: HourColors.gray800,
+              value: _selectedIcons[index],
+              style: HourStyles.label1.copyWith(color: HourColors.staticWhite),
+              items: availableIcons.map((iconPath) {
+                return DropdownMenuItem(
+                  value: iconPath,
+                  child: Image.asset(iconPath, width: 32, height: 32),
+                );
+              }).toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  setState(() {
+                    _selectedIcons[index] = value;
+                  });
+                }
+              },
+            ),
             const SizedBox(height: 20),
           ],
         );
@@ -162,6 +236,7 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
         return CategoryItem(
           title: data.title,
           amount: data.amount,
+          icon: data.icon,
           onDelete: () => viewModel.removeEntity(data.id ?? 0),
           onEdit: () {
             viewModel.setEditingCategory(data);
@@ -178,17 +253,17 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
       child: Row(
         children: [
           Image.asset(
-              "assets/images/ic_plus.png",
-              width: 20,
-              height: 20,
-              color: HourColors.staticWhite
+            "assets/images/ic_plus.png",
+            width: 20,
+            height: 20,
+            color: HourColors.staticWhite,
           ),
           const SizedBox(width: 8),
           Text(
-              "새로운 카테고리 만들기",
-              style: HourStyles.label1.copyWith(
-                  color: HourColors.staticWhite
-              )
+            "새로운 카테고리 만들기",
+            style: HourStyles.label1.copyWith(
+                color: HourColors.staticWhite
+            ),
           ),
         ],
       ),
@@ -198,9 +273,7 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
   Widget buildSaveButton(CategoryViewmodel viewModel) {
     return viewModel.isLoading
         ? const Center(
-        child: CircularProgressIndicator(
-            color: HourColors.orange500
-        )
+      child: CircularProgressIndicator(color: HourColors.orange500),
     )
         : ElevatedButton(
       onPressed: () {
@@ -216,46 +289,11 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       child: Text(
-          "저장하기",
-          style: HourStyles.label1.copyWith(
-              color: HourColors.staticWhite
-          )
+        "저장하기",
+        style: HourStyles.label1.copyWith(
+            color: HourColors.staticWhite
+        ),
       ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final viewModel = Provider.of<CategoryViewmodel>(context);
-
-    return DraggableScrollableSheet(
-      initialChildSize: 0.45,
-      minChildSize: 0.3,
-      maxChildSize: 0.95,
-      expand: false,
-      builder: (context, scrollController) {
-        return ModalBottomSheetContainer(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ListView(
-              controller: scrollController,
-              children: [
-                const SizedBox(height: 12),
-                Text("카테고리 생성하기", style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
-                const SizedBox(height: 12),
-                if (!isCreatingMultiple && !widget.viewModel.isEditing)
-                  buildExistingCategoryList(viewModel),
-                buildCategoryFields(),
-                const SizedBox(height: 12),
-                buildAddButton(),
-                const SizedBox(height: 24),
-                buildSaveButton(viewModel),
-                const SizedBox(height: 8),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 

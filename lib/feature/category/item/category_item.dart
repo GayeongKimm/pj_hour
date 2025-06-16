@@ -4,6 +4,7 @@ import '../../../component/theme/color.dart';
 import '../../../component/theme/style.dart';
 
 class CategoryItem extends StatelessWidget {
+  final String icon;
   final String title;
   final int amount;
   final VoidCallback onDelete;
@@ -11,11 +12,16 @@ class CategoryItem extends StatelessWidget {
 
   const CategoryItem({
     super.key,
+    required this.icon,
     required this.title,
     required this.amount,
     required this.onDelete,
     required this.onEdit,
   });
+
+  bool _isAssetImage(String value) {
+    return value.endsWith('.png') || value.endsWith('.jpg') || value.endsWith('.jpeg') || value.startsWith('assets/');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,11 +38,26 @@ class CategoryItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: HourStyles.body2.copyWith(
-                    color: HourColors.staticWhite,
-                  ),
+                Row(
+                  children: [
+                    _isAssetImage(icon)
+                        ? Image.asset(
+                      icon,
+                      width: 20,
+                      height: 20,
+                    )
+                        : Text(
+                      icon,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      title,
+                      style: HourStyles.body2.copyWith(
+                        color: HourColors.staticWhite,
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 8),
                 Row(
@@ -48,23 +69,24 @@ class CategoryItem extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(width: 4),
-                    Text(
-                      amount.toString().replaceAllMapped(
-                        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-                            (m) => '${m[1]},',
+                    if (amount > 0) ...[
+                      const SizedBox(width: 4),
+                      Text(
+                        amount.toString().replaceAllMapped(
+                          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                              (m) => '${m[1]},',
+                        ),
+                        style: HourStyles.label2.copyWith(
+                          color: HourColors.staticWhite,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      style: HourStyles.label2.copyWith(
-                        color: HourColors.staticWhite,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    ],
                   ],
                 ),
               ],
             ),
           ),
-
           PopupMenuButton<String>(
             icon: Image.asset(
               "assets/images/ic_more.png",
@@ -87,14 +109,14 @@ class CategoryItem extends StatelessWidget {
               const PopupMenuItem(
                 value: 'edit',
                 child: Text('수정', style: TextStyle(
-                    color: HourColors.staticWhite)
-                ),
+                  color: HourColors.staticWhite,
+                )),
               ),
               const PopupMenuItem(
                 value: 'delete',
                 child: Text('삭제', style: TextStyle(
-                    color: HourColors.staticWhite)
-                ),
+                  color: HourColors.staticWhite,
+                )),
               ),
             ],
           ),

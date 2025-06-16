@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../../component/appbar.dart';
 import '../../history/item/history_item.dart';
+import '../item/home_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -22,11 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final viewModel = Provider.of<HistoryViewmodel>(context, listen: false);
     showModalBottomSheet(
       context: context,
-      backgroundColor: HourColors.gray800,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
       isScrollControlled: true,
+      backgroundColor: Colors.transparent,
       builder: (_) => HomeBottomSheet(
         context: context,
         viewModel: viewModel,

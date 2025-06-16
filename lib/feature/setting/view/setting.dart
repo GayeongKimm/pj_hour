@@ -141,6 +141,7 @@ class _SettingScreenState extends State<SettingScreen> {
                   return CategoryItem(
                     title: category.title,
                     amount: category.amount,
+                    icon: category.icon,
                     onDelete: () {
                       categoryViewModel.removeEntity(category.id!);
                     },

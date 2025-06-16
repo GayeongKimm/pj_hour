@@ -10,43 +10,82 @@ class HistoryViewmodel with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
+  bool isEditing = false;
+  HistoryEntity? selectedHistory;
+
   List<HistoryEntity> _historyEntities = List.empty();
   List<HistoryEntity> get historyEntities => _historyEntities;
 
   StreamSubscription<List<HistoryEntity>>? _historyStreamSubscription;
 
-  void _getHistoryEntities() async {
-    final database = await DatabaseManager.getDatabase();
-    _historyStreamSubscription = database.historyDao.findAllEntitiesWithStream().listen((data) {
-      _historyEntities = data;
-      notifyListeners();
-    });
+  void clearEditingState() {
+    isEditing = false;
+    selectedHistory = null;
+    notifyListeners();
   }
 
-  Future<void> addCategory({
-    required String title,
-    required HistoryType type,
-    required int categoryId,
-    required int price,
-    required DateTime date,
-  }) async {
-    final database = await DatabaseManager.getDatabase();
-
-    final newCategory = HistoryEntity(
-        title: title,
-        type: type,
-        categoryId: categoryId,
-        price: price,
-        date: date,
-    );
-
-    await database.historyDao.insertHistoryEntity(newCategory);
+  void setEditingCategory(HistoryEntity history) {
+    isEditing = true;
+    selectedHistory = history;
     notifyListeners();
+  }
+
+  void getCategoryEntities() async {
+    final database = await DatabaseManager.getDatabase();
+    _historyStreamSubscription =
+        database.historyDao.findAllEntitiesWithStream().listen((data) {
+          _historyEntities = data;
+          notifyListeners();
+        });
   }
 
   void removeEntity(int id) async {
     final database = await DatabaseManager.getDatabase();
     await database.historyDao.deleteHistoryEntityById(id);
+    notifyListeners();
+  }
+
+  Future<void> addCategory({
+    required String title,
+    required int price,
+    required DateTime date,
+    required HistoryType type,
+    required int categoryId,
+  }) async {
+    final database = await DatabaseManager.getDatabase();
+
+    final newHistory = HistoryEntity(
+      title: title,
+      price: price,
+      date: date,
+      type: type,
+      categoryId: categoryId,
+    );
+
+    await database.historyDao.insertHistoryEntity(newHistory);
+    notifyListeners();
+  }
+
+  Future<void> updateCategory({
+    required int id,
+    required String title,
+    required int price,
+    required DateTime date,
+    required HistoryType type,
+    required int categoryId,
+  }) async {
+    final database = await DatabaseManager.getDatabase();
+
+    final updatedHistory = HistoryEntity(
+      id: id,
+      title: title,
+      price: price,
+      date: date,
+      type: type,
+      categoryId: categoryId,
+    );
+
+    await database.historyDao.updateHistoryEntity(updatedHistory);
     notifyListeners();
   }
 

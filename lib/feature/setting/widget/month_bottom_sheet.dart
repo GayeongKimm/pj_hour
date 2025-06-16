@@ -1,4 +1,3 @@
-import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -36,12 +35,6 @@ class _MonthBottomSheetState extends State<MonthBottomSheet> {
     }
   }
 
-  void _addNewCategoryField() {
-    setState(() {
-      _amountController.text = _formatter.format(widget.viewModel.selectedMonth?.amount);
-    });
-  }
-
   void _onSubmit() async {
     final raw = _amountController.text.replaceAll(',', '');
     final amount = int.tryParse(raw);
@@ -73,7 +66,11 @@ class _MonthBottomSheetState extends State<MonthBottomSheet> {
 
     Future.microtask(() {
       if (!mounted) return;
-      FlushbarUtil.show(context, "이번달 예산이 저장되었습니다.", color: HourColors.green);
+      FlushbarUtil.show(
+          context,
+          "이번달 예산이 저장되었습니다.",
+          color: HourColors.green
+      );
     });
   }
 
