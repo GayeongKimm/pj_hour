@@ -9,29 +9,33 @@ class AnalyticCategoryCell extends StatelessWidget {
   final String item;
   final dynamic content;
 
-  AnalyticCategoryCell({super.key, required this.title, required this.item, required this.content});
+  AnalyticCategoryCell({
+    super.key,
+    required this.title,
+    required this.item,
+    required this.content
+  });
 
   final formatter = NumberFormat('#,###');
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: HourColors.darkBlack,
           borderRadius: BorderRadius.all(
               Radius.circular(12)
           )
       ),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
         child: Row(
           children: [
             Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: HourColors.darkBlack
               ),
-              //TODO 재사용 할 수 있는 클래스 적용
               child: Image.asset(
                 width: 24,
                 height: 24,
@@ -44,19 +48,17 @@ class AnalyticCategoryCell extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "음식",
-                  style: TextStyle(color: Colors.white),
-                ),
-                Text(
-                  "shonnting",
-                  style: TextStyle(color: Colors.white),
+                  title,
+                  style: HourStyles.body2.copyWith(
+                      color: HourColors.staticWhite
+                  ),
                 ),
               ],
             ),
             Spacer(flex: 1),
             Text(
               this.content.runtimeType == int ? "₩${formatter.format(this.content)}" : this.content,
-              style: HourStyles.title1.copyWith(color: HourColors.staticWhite),
+              style: HourStyles.body2.copyWith(color: HourColors.staticWhite),
             ),
           ],
         ),
