@@ -24,7 +24,7 @@ class SettingCell extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: HourColors.gray800,
+          color: HourColors.darkBlack,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
@@ -62,14 +62,17 @@ class SettingCell extends StatelessWidget {
                         itemBuilder: (BuildContext context) => [
                           const PopupMenuItem(
                             value: 'edit',
-                            child: Text('수정', style: TextStyle(color: HourColors.staticWhite)),
+                            child: Text(
+                              '수정',
+                              style: TextStyle(
+                                  color: HourColors.staticWhite
+                              ),
+                            ),
                           ),
                         ],
                       ),
-
                     ],
                   ),
-                  SizedBox(height: 8),
                   Row(
                     children: [
                       Text(

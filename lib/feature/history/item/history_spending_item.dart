@@ -36,7 +36,7 @@ class HistorySpendingCell extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: HourColors.gray800,
+        color: HourColors.darkBlack,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -47,11 +47,18 @@ class HistorySpendingCell extends StatelessWidget {
               width: 36,
               height: 36,
               errorBuilder: (context, error, stackTrace) {
-                return const Icon(Icons.broken_image, size: 36, color: HourColors.gray500);
+                return const Icon(
+                    Icons.broken_image,
+                    size: 36,
+                    color: HourColors.gray500
+                );
               },
             )
           else
-            const Icon(Icons.category, size: 36, color: HourColors.gray500),
+            const Icon(
+                Icons.category,
+                size: 36, color: HourColors.gray500
+            ),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -59,19 +66,25 @@ class HistorySpendingCell extends StatelessWidget {
               children: [
                 Text(
                   category,
-                  style: HourStyles.label0.copyWith(color: HourColors.staticWhite),
+                  style: HourStyles.label0.copyWith(
+                      color: HourColors.staticWhite
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   title,
-                  style: HourStyles.label2.copyWith(color: HourColors.staticWhite),
+                  style: HourStyles.label2.copyWith(
+                      color: HourColors.staticWhite
+                  ),
                 ),
               ],
             ),
           ),
           Text(
             "₩${_formatter.format(amount)}",
-            style: HourStyles.label1.copyWith(color: HourColors.staticWhite),
+            style: HourStyles.label1.copyWith(
+                color: HourColors.staticWhite
+            ),
           ),
           PopupMenuButton<String>(
             tooltip: '더보기',
@@ -95,11 +108,21 @@ class HistorySpendingCell extends StatelessWidget {
             itemBuilder: (BuildContext context) => [
               PopupMenuItem(
                 value: 'edit',
-                child: Text('수정', style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
+                child: Text(
+                    '수정',
+                    style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite
+                    ),
+                ),
               ),
               PopupMenuItem(
                 value: 'delete',
-                child: Text('삭제', style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
+                child: Text(
+                    '삭제',
+                    style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite
+                    ),
+                ),
               ),
             ],
           ),

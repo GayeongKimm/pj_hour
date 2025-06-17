@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hour/component/default_appbar.dart';
 import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
-import 'package:hour/feature/analytic/widget/analytic_category_cell.dart';
+import 'package:hour/feature/analytic/item/analytic_category_item.dart';
 import 'package:provider/provider.dart';
 
 import '../../category/viewmodel/category_viewmodel.dart';

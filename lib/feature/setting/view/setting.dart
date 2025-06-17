@@ -35,7 +35,11 @@ class _SettingScreenState extends State<SettingScreen> {
     final now = DateTime.now();
     return viewModel.monthEntities.firstWhere(
           (e) => e.date.year == now.year && e.date.month == now.month,
-      orElse: () => MonthEntity(amount: 0, date: DateTime(now.year, now.month, 1)),
+      orElse: () => MonthEntity(
+          amount: 0, date: DateTime(
+          now.year, now.month, 1
+      ),
+      ),
     );
   }
 
@@ -50,7 +54,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: HourColors.gray800,
+      backgroundColor: HourColors.darkBlack,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -65,7 +69,7 @@ class _SettingScreenState extends State<SettingScreen> {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: HourColors.gray800,
+      backgroundColor: HourColors.darkBlack,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),

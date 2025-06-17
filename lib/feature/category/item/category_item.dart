@@ -29,7 +29,7 @@ class CategoryItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: HourColors.gray800,
+        color: HourColors.darkBlack,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -46,10 +46,7 @@ class CategoryItem extends StatelessWidget {
                       width: 20,
                       height: 20,
                     )
-                        : Text(
-                      icon,
-                      style: HourStyles.label2,
-                    ),
+                        : Text(icon),
                     const SizedBox(width: 8),
                     Text(
                       title,

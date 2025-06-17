@@ -4,7 +4,7 @@ import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/category/item/category_item.dart';
 import 'package:hour/feature/history/viewmodel/history_viewmodel.dart';
-import 'package:hour/feature/history/widget/history_spending_cell.dart';
+import 'package:hour/feature/history/item/history_spending_item.dart';
 import 'package:hour/feature/home/widget/home_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -102,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
             SingleChildScrollView(
               child: Container(
                 decoration: BoxDecoration(
-                  color: HourColors.gray800,
+                  color: HourColors.darkBlack,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 margin: const EdgeInsets.symmetric(horizontal: 16),
@@ -123,8 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text('₩ ${NumberFormat('#,###').format(monthSpending)}',
-                        style: HourStyles.title1.copyWith(
-                            color: HourColors.staticWhite)),
+                      style: HourStyles.title1.copyWith(
+                          color: HourColors.staticWhite
+                      ),
+                    ),
                     SizedBox(height: 10),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(7),
@@ -132,7 +134,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         value: monthProgress.clamp(0.0, 1.0),
                         backgroundColor: HourColors.gray600,
                         valueColor: const AlwaysStoppedAnimation<Color>(
-                            HourColors.primary300),
+                            HourColors.primary300
+                        ),
                         minHeight: 8,
                       ),
                     ),
@@ -154,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Container(
               decoration: BoxDecoration(
-                color: HourColors.gray800,
+                color: HourColors.darkBlack,
                 borderRadius: BorderRadius.circular(16),
               ),
               padding: const EdgeInsets.all(16),
