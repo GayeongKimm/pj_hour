@@ -6,15 +6,17 @@ import 'package:table_calendar/table_calendar.dart';
 class HistoryCalendar extends StatefulWidget {
   DateTime focusedDay;
   DateTime? selectedDay;
+  final void Function(DateTime selectedDay, DateTime focusedDay)? onDaySelected;
 
   HistoryCalendar(
-      {super.key, required this.focusedDay, required this.selectedDay});
+      {super.key, required this.focusedDay, required this.selectedDay, this.onDaySelected});
 
   @override
   State<HistoryCalendar> createState() => _HistoryCalendarState();
 }
 
 class _HistoryCalendarState extends State<HistoryCalendar> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,7 +32,7 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
               Text(
                 "${widget.focusedDay.year}년 ${widget.focusedDay.month}월",
                 style:
-                    HourStyles.body2.copyWith(color: HourColors.staticWhite),
+                HourStyles.body2.copyWith(color: HourColors.staticWhite),
               ),
               Row(
                 children: [
@@ -97,6 +99,10 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
                 widget.selectedDay = selectedDay;
                 widget.focusedDay = focusedDay;
               });
+
+              if (widget.onDaySelected != null) {
+                widget.onDaySelected!(selectedDay, focusedDay);
+              }
             },
             headerVisible: false,
             calendarStyle: CalendarStyle(

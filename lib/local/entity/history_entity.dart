@@ -23,14 +23,14 @@ class HistoryEntity {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is HistoryEntity &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          title == other.title &&
-          type == other.type &&
-          categoryId == other.categoryId &&
-          price == other.price &&
-          date == other.date;
+          other is HistoryEntity &&
+              runtimeType == other.runtimeType &&
+              id == other.id &&
+              title == other.title &&
+              type == other.type &&
+              categoryId == other.categoryId &&
+              price == other.price &&
+              date == other.date;
 
   @override
   int get hashCode =>

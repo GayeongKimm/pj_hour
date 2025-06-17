@@ -10,19 +10,10 @@ import 'package:hour/feature/root/view/root_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'core/navigation/app_routes.dart';
-import 'feature/history/viewmodel/history_create_viewmodel.dart';
 import 'feature/history/viewmodel/history_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await initializeDateFormatting();
-
-  // final database = LocalDatabase();
-  // GetIt.I.registerSingleton<LocalDatabase>(database);
-  //
-  // final repository = ScheduleRepository();
-  // final scheduleProvider = ScheduleProvider(repository: repository);
-
   runApp(
     MultiProvider(
       providers: [
@@ -41,9 +32,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      // providers: [
-      // ChangeNotifierProvider(create: (_) => ()),
-      // ],
       create: (BuildContext context) {},
       child: MaterialApp(
         title: "hour",

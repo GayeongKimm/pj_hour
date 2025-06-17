@@ -202,9 +202,9 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
             ),
             const SizedBox(height: 12),
             Text("아이콘을 선택해 주세요",
-              style: HourStyles.label1.copyWith(
-                  color: HourColors.staticWhite
-              )),
+                style: HourStyles.label1.copyWith(
+                    color: HourColors.staticWhite
+                )),
             DropdownButton<String>(
               dropdownColor: HourColors.gray800,
               value: _selectedIcons[index],

@@ -7,9 +7,10 @@ class HistorySpendingCell extends StatelessWidget {
 
   final String category;
   final String item;
+  final String icon;
   final dynamic amount;
 
-  HistorySpendingCell({super.key,required this.category, required this.item, required this.amount});
+  HistorySpendingCell({super.key,required this.category, required this.item, required this.amount, required this.icon});
 
   final formatter = NumberFormat('#,###');
 
@@ -23,7 +24,7 @@ class HistorySpendingCell extends StatelessWidget {
           )
       ),
       child: Padding(
-        padding: const EdgeInsets.all(14.0),
+        padding: const EdgeInsets.all(16.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,7 +36,7 @@ class HistorySpendingCell extends StatelessWidget {
                 color: HourColors.gray600,
               ),
               child: Image.asset(
-                'assets/images/ic_shopping.png',
+                icon,
                 color: HourColors.primary300,
               ),
             ),
@@ -44,22 +45,22 @@ class HistorySpendingCell extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "쇼핑",
-                  style: HourStyles.label1
+                  category,
+                  style: HourStyles.label0
                       .copyWith(color: HourColors.staticWhite),
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "졸업사진 옷",
+                  item,
                   style:
-                      HourStyles.label2.copyWith(color: HourColors.staticWhite),
+                  HourStyles.label2.copyWith(color: HourColors.staticWhite),
                 ),
               ],
             ),
             Spacer(flex: 1),
             Text(
               "₩${formatter.format(this.amount)}",
-              style: HourStyles.label2
+              style: HourStyles.label1
                   .copyWith(color: HourColors.staticWhite),
             ),
           ],

@@ -83,7 +83,6 @@ class CategoryViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
-
   void setIsLoading(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();

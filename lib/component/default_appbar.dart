@@ -19,7 +19,8 @@ class DefaultAppbar extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              vertical: 6, horizontal: 4
+              vertical: 6,
+              horizontal: 4
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,

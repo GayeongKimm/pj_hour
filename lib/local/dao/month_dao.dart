@@ -1,5 +1,4 @@
 import 'package:floor/floor.dart';
-import 'package:hour/local/entity/history_entity.dart';
 
 import '../entity/month_entity.dart';
 

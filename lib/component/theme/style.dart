@@ -30,6 +30,13 @@ class HourStyles {
     height: 1.3,
   );
 
+  static const label0 = TextStyle(
+    fontFamily: "Pretendard",
+    fontWeight: FontWeight.w600,
+    fontSize: 16.0,
+    height: 1.3,
+  );
+
   static const label1 = TextStyle(
     fontFamily: "Pretendard",
     fontWeight: FontWeight.w500,

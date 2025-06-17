@@ -21,13 +21,15 @@ class SubAppbar extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
-              vertical: 6, horizontal: 4
+              vertical: 6,
+              horizontal: 4
           ),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 width: 12,
+                height: 48,
               ),
               Text(
                 title,
@@ -35,7 +37,7 @@ class SubAppbar extends StatelessWidget {
                     color: HourColors.staticWhite
                 ),
               ),
-              Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox()),
               SizedBox(
                 width: 48,
                 height: 48,

@@ -6,13 +6,13 @@ import 'package:intl/intl.dart';
 class AnalyticCategoryCell extends StatelessWidget {
 
   final String title;
-  final String item;
+  final String icon;
   final dynamic content;
 
   AnalyticCategoryCell({
     super.key,
     required this.title,
-    required this.item,
+    required this.icon,
     required this.content
   });
 
@@ -39,7 +39,7 @@ class AnalyticCategoryCell extends StatelessWidget {
               child: Image.asset(
                 width: 24,
                 height: 24,
-                "assets/images/ic_shopping.png",
+                icon,
                 color: HourColors.primary300,
               ),
             ),

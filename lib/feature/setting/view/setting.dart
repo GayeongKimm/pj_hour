@@ -81,7 +81,6 @@ class _SettingScreenState extends State<SettingScreen> {
   Widget build(BuildContext context) {
     final monthViewModel = context.watch<MonthViewmodel>();
     final categoryViewModel = context.watch<CategoryViewmodel>();
-
     final currentMonth = _getCurrentMonth(monthViewModel);
     final categories = categoryViewModel.categoryEntities;
 
@@ -151,7 +150,9 @@ class _SettingScreenState extends State<SettingScreen> {
                         context: context,
                         backgroundColor: HourColors.gray800,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20)
+                          ),
                         ),
                         isScrollControlled: true,
                         builder: (_) => SettingBottomSheet(
