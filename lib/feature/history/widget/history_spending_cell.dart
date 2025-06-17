@@ -4,67 +4,106 @@ import 'package:hour/component/theme/style.dart';
 import 'package:intl/intl.dart';
 
 class HistorySpendingCell extends StatelessWidget {
-
   final String category;
-  final String item;
+  final String title;
   final String icon;
-  final dynamic amount;
+  final int amount;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
 
-  HistorySpendingCell({super.key,required this.category, required this.item, required this.amount, required this.icon});
+  const HistorySpendingCell({
+    super.key,
+    required this.category,
+    required this.title,
+    required this.icon,
+    required this.amount,
+    required this.onDelete,
+    required this.onEdit,
+  });
 
-  final formatter = NumberFormat('#,###');
+  static final _formatter = NumberFormat('#,###');
+
+  static bool _isAssetImage(String value) {
+    return value.endsWith('.png') ||
+        value.endsWith('.jpg') ||
+        value.endsWith('.jpeg') ||
+        value.startsWith('assets/');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-          color: HourColors.gray800,
-          borderRadius: BorderRadius.all(
-              Radius.circular(12)
-          )
+        color: HourColors.gray800,
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: HourColors.gray600,
-              ),
-              child: Image.asset(
-                icon,
-                color: HourColors.primary300,
-              ),
-            ),
-            SizedBox(width: 20),
-            Column(
+      child: Row(
+        children: [
+          if (_isAssetImage(icon))
+            Image.asset(
+              icon,
+              width: 36,
+              height: 36,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(Icons.broken_image, size: 36, color: HourColors.gray500);
+              },
+            )
+          else
+            const Icon(Icons.category, size: 36, color: HourColors.gray500),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   category,
-                  style: HourStyles.label0
-                      .copyWith(color: HourColors.staticWhite),
+                  style: HourStyles.label0.copyWith(color: HourColors.staticWhite),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 4),
                 Text(
-                  item,
-                  style:
-                  HourStyles.label2.copyWith(color: HourColors.staticWhite),
+                  title,
+                  style: HourStyles.label2.copyWith(color: HourColors.staticWhite),
                 ),
               ],
             ),
-            Spacer(flex: 1),
-            Text(
-              "₩${formatter.format(this.amount)}",
-              style: HourStyles.label1
-                  .copyWith(color: HourColors.staticWhite),
+          ),
+          Text(
+            "₩${_formatter.format(amount)}",
+            style: HourStyles.label1.copyWith(color: HourColors.staticWhite),
+          ),
+          PopupMenuButton<String>(
+            tooltip: '더보기',
+            icon: Image.asset(
+              "assets/images/ic_more.png",
+              width: 20,
+              height: 20,
+              color: HourColors.gray500,
             ),
-          ],
-        ),
+            color: HourColors.gray700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            onSelected: (value) {
+              if (value == 'edit') {
+                onEdit();
+              } else if (value == 'delete') {
+                onDelete();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Text('수정', style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Text('삭제', style: HourStyles.label2.copyWith(color: HourColors.staticWhite)),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

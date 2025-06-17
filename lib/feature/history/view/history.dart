@@ -87,14 +87,15 @@ class _HistoryScreenState extends State<HistoryScreen> {
                 Column(
                   children: filteredHistories.map((history) {
                     final category = findCategoryById(history.categoryId);
-
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
                       child: HistorySpendingCell(
                         category: category?.title ?? '알 수 없음',
-                        item: history.title,
+                        title: history.title,
                         amount: history.price,
                         icon: category?.icon ?? 'assets/images/ic_default.png',
+                        onDelete: () { },
+                        onEdit: () { },
                       ),
                     );
                   }).toList(),

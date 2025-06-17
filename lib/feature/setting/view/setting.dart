@@ -10,7 +10,7 @@ import '../../../local/entity/month_entity.dart';
 import '../../category/item/category_item.dart';
 import '../../month/viewmodel/month_viewmodel.dart';
 import '../widget/setting_bottom_sheet.dart';
-import '../widget/setting_cell.dart';
+import '../item/setting_item.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});

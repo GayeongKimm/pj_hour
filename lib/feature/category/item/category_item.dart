@@ -48,7 +48,7 @@ class CategoryItem extends StatelessWidget {
                     )
                         : Text(
                       icon,
-                      style: const TextStyle(fontSize: 16),
+                      style: HourStyles.label2,
                     ),
                     const SizedBox(width: 8),
                     Text(

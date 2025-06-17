@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hour/component/default_appbar.dart';
 import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/category/item/category_item.dart';
@@ -38,8 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final now = DateTime.now();
     return viewModel.monthEntities.firstWhere(
           (e) => e.date.year == now.year && e.date.month == now.month,
-      orElse: () =>
-          MonthEntity(amount: 0, date: DateTime(now.year, now.month, 1)),
+      orElse: () => MonthEntity(amount: 0, date: DateTime(now.year, now.month, 1)),
     );
   }
 
@@ -86,134 +86,164 @@ class _HomeScreenState extends State<HomeScreen> {
     final int dailyBudget = (monthLimit / daysInMonth).floor();
     final double dailyProgress = todaySpending / dailyBudget;
 
-    return Consumer<HistoryViewmodel>(
-      builder: (context, viewModel, _) {
-        return Scaffold(
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(60),
-            child: SubAppbar(
-              title: '이번 달 소비',
-              onPlusClick: () => _showHomeBottomSheet(context),
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(60),
+        child: SubAppbar(
+          title: '이번 달 소비',
+          onPlusClick: () => _showHomeBottomSheet(context),
+        ),
+      ),
+      backgroundColor: HourColors.staticBlack,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: HourColors.gray800,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('이번달 쓴 금액',
+                            style: HourStyles.label1.copyWith(
+                                color: HourColors.staticWhite)),
+                        Text('한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
+                            style: HourStyles.label1.copyWith(
+                                color: HourColors.staticWhite)),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text('₩ ${NumberFormat('#,###').format(monthSpending)}',
+                        style: HourStyles.title1.copyWith(
+                            color: HourColors.staticWhite)),
+                    SizedBox(height: 10),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(7),
+                      child: LinearProgressIndicator(
+                        value: monthProgress.clamp(0.0, 1.0),
+                        backgroundColor: HourColors.gray600,
+                        valueColor: const AlwaysStoppedAnimation<Color>(
+                            HourColors.primary300),
+                        minHeight: 8,
+                      ),
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                        '₩ ${NumberFormat("#,###").format(dailyRemaining)}원 더 쓸 수 있어요!',
+                        style: HourStyles.label2.copyWith(
+                            color: HourColors.staticWhite)
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          backgroundColor: HourColors.staticBlack,
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ListView(
+            const SizedBox(
+              height: 60,
+              child: DefaultAppbar(
+                  title: '오늘의 소비'
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: HourColors.gray800,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: HourColors.gray800,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('이번달 쓴 금액',
-                                style: HourStyles.label1.copyWith(
-                                    color: HourColors.staticWhite
-                                )
-                            ),
-                            Text('한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
-                                style: HourStyles.label1.copyWith(
-                                    color: HourColors.staticWhite
-                                )
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 8),
-                        Text('₩ ${NumberFormat('#,###').format(monthSpending)}',
-                            style: HourStyles.title1.copyWith(
-                                color: HourColors.staticWhite
-                            )
-                        ),
-                        SizedBox(height: 10),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: LinearProgressIndicator(
-                            value: monthProgress.clamp(0.0, 1.0),
-                            backgroundColor: HourColors.gray600,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                HourColors.primary300),
-                            minHeight: 8,
-                          ),
-                        ),
-                        SizedBox(height: 8),
-                        Text('₩ ${NumberFormat("#,###").format(dailyRemaining)}원 더 쓸 수 있어요!',
-                            style: HourStyles.label2
-                                .copyWith(color: HourColors.staticWhite)),
-                      ],
+                  Text(
+                    '오늘 쓴 금액',
+                    style: HourStyles.label1.copyWith(
+                        color: HourColors.staticWhite
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text("오늘의 소비",
-                      style: HourStyles.title1.copyWith(
-                          color: HourColors.staticWhite
-                      )
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text('₩ ${NumberFormat("#,###").format(todaySpending)}',
+                          style: HourStyles.title1
+                              .copyWith(color: HourColors.staticWhite)),
+                      const Spacer(),
+                      Text('₩ ${NumberFormat("#,###").format(dailyBudget)}',
+                          style: HourStyles.label0
+                              .copyWith(color: HourColors.staticWhite)),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: HourColors.gray800,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('오늘 쓴 금액',
-                            style: HourStyles.label1.copyWith(color: HourColors.staticWhite)),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text('₩ ${NumberFormat("#,###").format(todaySpending)}',
-                                style: HourStyles.title1.copyWith(color: HourColors.staticWhite)),
-                            const Spacer(),
-                            Text('₩ ${NumberFormat("#,###").format(dailyBudget)}',
-                                style: HourStyles.label0.copyWith(color: HourColors.staticWhite)),
-                          ],
-                        ),
-                        SizedBox(height: 10),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(7),
-                          child: LinearProgressIndicator(
-                            value: dailyProgress.clamp(0.0, 1.0),
-                            backgroundColor: HourColors.gray600,
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                HourColors.primary300),
-                            minHeight: 8,
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                      ],
+                  SizedBox(height: 10),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: LinearProgressIndicator(
+                      value: dailyProgress.clamp(0.0, 1.0),
+                      backgroundColor: HourColors.gray600,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          HourColors.primary300),
+                      minHeight: 8,
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Column(
-                    children: todayHistories.map((history) {
-                      final category = findCategoryById(history.categoryId);
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 16.0),
-                        child: HistorySpendingCell(
-                          category: category?.title ?? '알 수 없음',
-                          item: history.title,
-                          amount: history.price,
-                          icon: category?.icon ?? 'assets/images/ic_default.png',
-                        ),
-                      );
-                    }).toList(),
-                  )
+                  SizedBox(height: 2),
                 ],
               ),
             ),
-          ),
-        );
-      },
+            SizedBox(height: 20),
+            Expanded(
+              child: histories.isEmpty ?
+              const Center(
+                child: Text(
+                  '기록이 없습니다.\n추가 버튼을 눌러 기록을 만들어보세요.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: HourColors.gray500),
+                ),
+              )
+                  : ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                itemCount: todayHistories.length,
+                itemBuilder: (context, index) {
+                  final history = todayHistories[index];
+                  final category = findCategoryById(history.categoryId);
+
+                  return HistorySpendingCell(
+                    category: category?.title ?? '알 수 없음',
+                    title: history.title,
+                    amount: history.price,
+                    icon: category?.icon ?? 'assets/images/ic_default.png',
+                    onDelete: () {
+                      historyViewModel.removeEntity(history.id!);
+                    },
+                    onEdit: () {
+                      historyViewModel.setEditingHistory(history);
+                      showModalBottomSheet(
+                        context: context,
+                        backgroundColor: HourColors.gray800,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20)
+                          ),
+                        ),
+                        isScrollControlled: true,
+                        builder: (_) => HomeBottomSheet(
+                          context: context,
+                          viewModel: historyViewModel,
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

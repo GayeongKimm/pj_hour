@@ -9,7 +9,6 @@ import '../../home/item/home_item.dart';
 class HistoryViewmodel with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-
   bool isEditing = false;
   HistoryEntity? selectedHistory;
 
@@ -24,7 +23,7 @@ class HistoryViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
-  void setEditingCategory(HistoryEntity history) {
+  void setEditingHistory(HistoryEntity history) {
     isEditing = true;
     selectedHistory = history;
     notifyListeners();

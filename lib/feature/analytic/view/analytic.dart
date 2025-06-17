@@ -167,7 +167,9 @@ class _AnalyticScreenState extends State<AnalyticScreen> {
             ),
             const SizedBox(
               height: 60,
-              child: DefaultAppbar(title: '이번 달 최고 카테고리'),
+              child: DefaultAppbar(
+                  title: '이번 달 최고 카테고리'
+              ),
             ),
             Expanded(
               child: categories.isEmpty
