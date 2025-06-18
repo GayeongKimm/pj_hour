@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final monthSpending = histories
         .where((h) => h.date.year == now.year && h.date.month == now.month)
         .fold<int>(0, (sum, h) =>
-    h.type == HistoryType.INCOME ? sum + h.price : sum - h.price);
+    h.type == HistoryType.INCOME ? sum - h.price : sum + h.price);
 
     final monthLimit = currentMonth?.amount ?? 0;
 
@@ -89,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ..sort((a, b) => b.date.compareTo(a.date));
 
     final todaySpending = todayHistories.fold<int>(0, (sum, h) =>
-    h.type == HistoryType.INCOME ? sum + h.price : sum - h.price);
+    h.type == HistoryType.INCOME ? sum - h.price : sum + h.price);
 
     final int daysInMonth = DateTime(now.year, now.month + 1, 0).day;
     final int dailyBudget = (monthLimit / daysInMonth).floor();
