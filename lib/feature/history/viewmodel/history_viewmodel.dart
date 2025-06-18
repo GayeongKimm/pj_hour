@@ -52,9 +52,15 @@ class HistoryViewmodel with ChangeNotifier {
     final categoryViewModel = context.read<CategoryViewmodel>();
 
     if (history.type == HistoryType.CONSUMPTION) {
-      categoryViewModel.decreaseCategoryPrice(history.categoryId, history.price);
+      categoryViewModel.decreaseCategoryPrice(
+          history.categoryId,
+          history.price
+      );
     } else {
-      categoryViewModel.increaseCategoryPrice(history.categoryId, history.price);
+      categoryViewModel.increaseCategoryPrice(
+          history.categoryId,
+          history.price
+      );
     }
 
     notifyListeners();

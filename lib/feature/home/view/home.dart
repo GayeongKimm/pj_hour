@@ -5,6 +5,7 @@ import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/category/item/category_item.dart';
 import 'package:hour/feature/history/viewmodel/history_viewmodel.dart';
 import 'package:hour/feature/history/item/history_item.dart';
+import 'package:hour/feature/home/item/home_item.dart';
 import 'package:hour/feature/home/widget/home_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -74,7 +75,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final monthSpending = histories
         .where((h) => h.date.year == now.year && h.date.month == now.month)
-        .fold<int>(0, (sum, h) => sum + h.price);
+        .fold<int>(0, (sum, h) =>
+    h.type == HistoryType.INCOME ? sum + h.price : sum - h.price);
 
     final monthLimit = currentMonth?.amount ?? 0;
 
@@ -86,15 +88,21 @@ class _HomeScreenState extends State<HomeScreen> {
     }).toList()
       ..sort((a, b) => b.date.compareTo(a.date));
 
-    final todaySpending = todayHistories.fold<int>(0, (sum, h) => sum + h.price);
+    final todaySpending = todayHistories.fold<int>(0, (sum, h) =>
+    h.type == HistoryType.INCOME ? sum + h.price : sum - h.price);
+
     final int daysInMonth = DateTime(now.year, now.month + 1, 0).day;
     final int dailyBudget = (monthLimit / daysInMonth).floor();
 
     final bool isMonthOverLimit = monthSpending > monthLimit;
-    final Color monthProgressColor = isMonthOverLimit ? HourColors.primary400 : HourColors.primary300;
+    final Color monthProgressColor = isMonthOverLimit
+        ? HourColors.primary400
+        : HourColors.primary300;
 
     final bool isDailyOverLimit = todaySpending > dailyBudget;
-    final Color dailyProgressColor = isDailyOverLimit ? HourColors.primary400 : HourColors.primary300;
+    final Color dailyProgressColor = isDailyOverLimit
+        ? HourColors.primary400
+        : HourColors.primary300;
 
     final double monthProgress = monthLimit == 0 ? 0 : (monthSpending / monthLimit).clamp(0.0, 1.0);
     final double dailyProgress = todaySpending / (dailyBudget == 0 ? 1 : dailyBudget);
@@ -141,14 +149,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         Text(
                           '이번달 쓴 금액',
                           style: HourStyles.label1.copyWith(
-                              color: HourColors.staticWhite
-                          ),
+                              color: HourColors.staticWhite),
                         ),
                         Text(
                           '한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
                           style: HourStyles.label1.copyWith(
-                              color: HourColors.staticWhite
-                          ),
+                              color: HourColors.staticWhite),
                         ),
                       ],
                     ),
@@ -156,8 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       '₩ ${NumberFormat('#,###').format(monthSpending)}',
                       style: HourStyles.title1.copyWith(
-                          color: HourColors.staticWhite
-                      ),
+                          color: HourColors.staticWhite),
                     ),
                     const SizedBox(height: 10),
                     ClipRRect(
@@ -165,7 +170,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: LinearProgressIndicator(
                         value: monthProgress,
                         backgroundColor: HourColors.gray600,
-                        valueColor: AlwaysStoppedAnimation<Color>(monthProgressColor),
+                        valueColor:
+                        AlwaysStoppedAnimation<Color>(monthProgressColor),
                         minHeight: 8,
                       ),
                     ),
@@ -173,8 +179,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       remainingText,
                       style: HourStyles.label2.copyWith(
-                          color: HourColors.staticWhite
-                      ),
+                          color: HourColors.staticWhite),
                     ),
                   ],
                 ),
@@ -197,8 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     '오늘 쓴 금액',
                     style: HourStyles.label1.copyWith(
-                        color: HourColors.staticWhite
-                    ),
+                        color: HourColors.staticWhite),
                   ),
                   const SizedBox(height: 8),
                   Row(
@@ -206,15 +210,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         '₩ ${NumberFormat("#,###").format(todaySpending)}',
                         style: HourStyles.title1.copyWith(
-                            color: HourColors.staticWhite
-                        ),
+                            color: HourColors.staticWhite),
                       ),
                       const Spacer(),
                       Text(
                         '₩ ${NumberFormat("#,###").format(dailyBudget)}',
                         style: HourStyles.label0.copyWith(
-                            color: HourColors.staticWhite
-                        ),
+                            color: HourColors.staticWhite),
                       ),
                     ],
                   ),
@@ -224,7 +226,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: LinearProgressIndicator(
                       value: dailyProgress.clamp(0.0, 1.0),
                       backgroundColor: HourColors.gray600,
-                      valueColor: AlwaysStoppedAnimation<Color>(dailyProgressColor),
+                      valueColor:
+                      AlwaysStoppedAnimation<Color>(dailyProgressColor),
                       minHeight: 8,
                     ),
                   ),
@@ -232,8 +235,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Text(
                     remainingDailyText,
                     style: HourStyles.label2.copyWith(
-                        color: HourColors.staticWhite
-                    ),
+                        color: HourColors.staticWhite),
                   ),
                 ],
               ),
@@ -249,7 +251,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               )
                   : ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 8),
                 itemCount: todayHistories.length,
                 itemBuilder: (context, index) {
                   final history = todayHistories[index];
@@ -262,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     historyType: history.type,
                     icon: category?.icon ?? 'assets/images/ic_clock.png',
                     onDelete: () {
-                      historyViewModel.removeHistory(history.id!,context);
+                      historyViewModel.removeHistory(history.id!, context);
                     },
                     onEdit: () {
                       historyViewModel.setEditingHistory(history);
@@ -270,7 +273,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         backgroundColor: HourColors.gray800,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                          borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20)),
                         ),
                         isScrollControlled: true,
                         builder: (_) => HomeBottomSheet(

@@ -87,7 +87,7 @@ class HistoryItem extends StatelessWidget {
                     Text(
                       "₩",
                       style: HourStyles.label2.copyWith(
-                        color: HourColors.primary300,
+                        color: iconColor,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
