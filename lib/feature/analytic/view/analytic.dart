@@ -6,6 +6,7 @@ import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/analytic/item/analytic_category_item.dart';
 import 'package:provider/provider.dart';
 
+import '../../../local/entity/category_entity.dart';
 import '../../category/viewmodel/category_viewmodel.dart';
 
 class AnalyticScreen extends StatefulWidget {
@@ -146,12 +147,15 @@ class _AnalyticScreenState extends State<AnalyticScreen> {
                             ),
                             const SizedBox(height: 16),
                             Column(
-                              children: List.generate(categories.length, (index) {
-                                final category = categories[index];
+                              children: List.generate(categoryWithColors.length, (index) {
+                                final data = categoryWithColors[index];
+                                final category = data['category'] as CategoryEntity;
+                                final color = data['color'] as Color;
+
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 10),
                                   child: _pieChartDataItem(
-                                    color: HourColors.orange500,
+                                    color: color,
                                     label: category.title,
                                     amount: category.amount,
                                   ),
