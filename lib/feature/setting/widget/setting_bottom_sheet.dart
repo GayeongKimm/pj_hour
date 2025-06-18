@@ -107,10 +107,9 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
 
   Future<void> _handleEditCategory() async {
     final title = _titleControllers[0].text.trim();
-    final amount = int.tryParse(_amountControllers[0].text.replaceAll(',', '')) ?? 0;
     final icon = _selectedIcons[0];
 
-    if (title.isEmpty || amount <= 0) {
+    if (title.isEmpty) {
       FlushbarUtil.show(context, "카테고리 이름과 금액을 올바르게 입력해주세요.");
       return;
     }
