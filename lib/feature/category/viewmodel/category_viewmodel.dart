@@ -98,6 +98,23 @@ class CategoryViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
+  void decreaseCategoryPrice(int categoryId, int amount) async {
+    final database = await DatabaseManager.getDatabase();
+
+    final category = _categoryEntities.firstWhere((c) => c.id == categoryId);
+
+    final updatedCategory = CategoryEntity(
+      id: category.id,
+      title: category.title,
+      amount: category.amount - amount,
+      date: category.date,
+      icon: category.icon,
+    );
+
+    await database.categoryDao.updateCategoryEntity(updatedCategory);
+    notifyListeners();
+  }
+
   void setIsLoading(bool isLoading) {
     _isLoading = isLoading;
     notifyListeners();

@@ -255,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     historyType: history.type,
                     icon: category?.icon ?? 'assets/images/ic_clock.png',
                     onDelete: () {
-                      historyViewModel.removeHistory(history.id!);
+                      historyViewModel.removeHistory(history.id!,context);
                     },
                     onEdit: () {
                       historyViewModel.setEditingHistory(history);

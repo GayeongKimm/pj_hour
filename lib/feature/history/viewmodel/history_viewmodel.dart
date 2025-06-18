@@ -41,9 +41,23 @@ class HistoryViewmodel with ChangeNotifier {
         });
   }
 
-  Future<void> removeHistory(int id) async {
+  Future<void> removeHistory(int id, BuildContext context) async {
     final database = await DatabaseManager.getDatabase();
+
+    final history = await database.historyDao.findHistoryEntityById(id);
+    if (history == null) return;
+
     await database.historyDao.deleteHistoryEntityById(id);
+
+    final categoryViewModel = context.read<CategoryViewmodel>();
+
+    if (history.type == HistoryType.CONSUMPTION) {
+      categoryViewModel.decreaseCategoryPrice(history.categoryId, history.price);
+    } else {
+      categoryViewModel.increaseCategoryPrice(history.categoryId, history.price);
+    }
+
+    notifyListeners();
   }
 
   Future<void> addHistory({
@@ -64,10 +78,13 @@ class HistoryViewmodel with ChangeNotifier {
       date: date,
     );
     await database.historyDao.insertHistoryEntity(newHistory);
+    final categoryViewModel = context.read<CategoryViewmodel>();
 
     if (type == HistoryType.CONSUMPTION) {
-      final categoryViewModel = context.read<CategoryViewmodel>();
       categoryViewModel.increaseCategoryPrice(categoryId, price);
+    }
+    else{
+      categoryViewModel.decreaseCategoryPrice(categoryId, price);
     }
 
     notifyListeners();

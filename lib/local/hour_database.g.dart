@@ -303,7 +303,7 @@ class _$HistoryDao extends HistoryDao {
   final DeletionAdapter<HistoryEntity> _historyEntityDeletionAdapter;
 
   @override
-  Future<HistoryEntity?> findOutEntityById(int id) async {
+  Future<HistoryEntity?> findHistoryEntityById(int id) async {
     return _queryAdapter.query('SELECT * FROM history WHERE id = ?1',
         mapper: (Map<String, Object?> row) => HistoryEntity(
             id: row['id'] as int?,

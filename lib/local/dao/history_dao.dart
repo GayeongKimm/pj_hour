@@ -4,7 +4,7 @@ import 'package:hour/local/entity/history_entity.dart';
 @dao
 abstract class HistoryDao {
   @Query('SELECT * FROM $_tableName WHERE id = :id')
-  Future<HistoryEntity?> findOutEntityById(int id);
+  Future<HistoryEntity?> findHistoryEntityById(int id);
 
   @Query('SELECT * FROM $_tableName')
   Future<List<HistoryEntity>> findAllEntities();

@@ -174,14 +174,18 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
             ),
             const SizedBox(height: 12),
             const SizedBox(height: 12),
-            Text("아이콘을 선택해 주세요",
+            Text(
+                "아이콘을 선택해 주세요",
                 style: HourStyles.label1.copyWith(
                     color: HourColors.staticWhite
-                )),
+                )
+            ),
             DropdownButton<String>(
               dropdownColor: HourColors.gray800,
               value: _selectedIcons[index],
-              style: HourStyles.label1.copyWith(color: HourColors.staticWhite),
+              style: HourStyles.label1.copyWith(
+                  color: HourColors.staticWhite
+              ),
               items: availableIcons.map((iconPath) {
                 return DropdownMenuItem(
                   value: iconPath,
@@ -189,7 +193,7 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
                     colorFilter: ColorFilter.mode(
                       _selectedIcons[index] == iconPath
                           ? HourColors.primary300
-                          : Colors.transparent,
+                          : HourColors.staticWhite,
                       BlendMode.srcATop,
                     ),
                     child: Image.asset(iconPath, width: 32, height: 32),
