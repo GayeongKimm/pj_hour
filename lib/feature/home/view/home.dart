@@ -99,10 +99,15 @@ class _HomeScreenState extends State<HomeScreen> {
     final double monthProgress = monthLimit == 0 ? 0 : (monthSpending / monthLimit).clamp(0.0, 1.0);
     final double dailyProgress = todaySpending / (dailyBudget == 0 ? 1 : dailyBudget);
 
-    final int dailyRemaining = monthLimit - monthSpending;
+    final int dailyMonthRemaining = monthLimit - monthSpending;
+    final bool isMonthOverLimitText = dailyMonthRemaining < 0;
+    final String remainingText = isMonthOverLimitText
+        ? '₩ ${NumberFormat("#,###").format(-dailyMonthRemaining)}원 초과 했어요'
+        : '₩ ${NumberFormat("#,###").format(dailyMonthRemaining)}원 더 쓸 수 있어요!';
 
+    final int dailyRemaining = dailyBudget - todaySpending;
     final bool isOverLimit = dailyRemaining < 0;
-    final String remainingText = isOverLimit
+    final String remainingDailyText = isOverLimit
         ? '₩ ${NumberFormat("#,###").format(-dailyRemaining)}원 초과 했어요'
         : '₩ ${NumberFormat("#,###").format(dailyRemaining)}원 더 쓸 수 있어요!';
 
@@ -225,8 +230,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    remainingText,
-                    style: HourStyles.label2.copyWith(color: HourColors.staticWhite),
+                    remainingDailyText,
+                    style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite
+                    ),
                   ),
                 ],
               ),
