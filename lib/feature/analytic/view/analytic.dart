@@ -1,13 +1,13 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:hour/component/default_appbar.dart';
 import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
-import 'package:hour/feature/analytic/item/analytic_category_item.dart';
 import 'package:provider/provider.dart';
 
+import '../../../component/default_appbar.dart';
 import '../../../local/entity/category_entity.dart';
 import '../../category/viewmodel/category_viewmodel.dart';
+import '../item/analytic_category_item.dart';
 
 class AnalyticScreen extends StatefulWidget {
   const AnalyticScreen({super.key});
@@ -69,7 +69,9 @@ class _AnalyticScreenState extends State<AnalyticScreen> {
   Widget build(BuildContext context) {
     final categoryViewModel = context.watch<CategoryViewmodel>();
     final categories = categoryViewModel.categoryEntities;
+
     final total = categories.fold<int>(0, (sum, e) => sum + e.amount);
+
     final sortedCategories = [...categories]
       ..sort((a, b) => b.amount.compareTo(a.amount));
 
@@ -106,8 +108,8 @@ class _AnalyticScreenState extends State<AnalyticScreen> {
                       const SizedBox(height: 20),
                       Text(
                         "카테고리별 지출",
-                        style: HourStyles.body2.copyWith(
-                          color: HourColors.staticWhite,
+                        style: HourStyles.body2
+                            .copyWith(color: HourColors.staticWhite
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -127,7 +129,7 @@ class _AnalyticScreenState extends State<AnalyticScreen> {
                       else
                         Column(
                           children: [
-                            SizedBox(
+                            Container(
                               width: 200,
                               height: 200,
                               child: PieChart(
@@ -145,7 +147,6 @@ class _AnalyticScreenState extends State<AnalyticScreen> {
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 16),
                             Column(
                               children: List.generate(categoryWithColors.length, (index) {
                                 final data = categoryWithColors[index];
