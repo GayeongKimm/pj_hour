@@ -22,7 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -72,13 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     final now = DateTime.now();
+
     final monthSpending = histories
         .where((h) => h.date.year == now.year && h.date.month == now.month)
         .fold<int>(0, (sum, h) => sum + h.price);
 
     final monthLimit = currentMonth?.amount ?? 0;
-    final dailyRemaining = monthLimit - monthSpending;
-    final monthProgress = monthSpending / monthLimit;
 
     final todayHistories = histories.where((history) {
       final date = history.date;
@@ -88,16 +86,25 @@ class _HomeScreenState extends State<HomeScreen> {
     }).toList()
       ..sort((a, b) => b.date.compareTo(a.date));
 
-    final todaySpending = histories
-        .where((h) =>
-    h.date.year == now.year &&
-        h.date.month == now.month &&
-        h.date.day == now.day)
-        .fold<int>(0, (sum, h) => sum + h.price);
-
+    final todaySpending = todayHistories.fold<int>(0, (sum, h) => sum + h.price);
     final int daysInMonth = DateTime(now.year, now.month + 1, 0).day;
     final int dailyBudget = (monthLimit / daysInMonth).floor();
-    final double dailyProgress = todaySpending / dailyBudget;
+
+    final bool isMonthOverLimit = monthSpending > monthLimit;
+    final Color monthProgressColor = isMonthOverLimit ? HourColors.primary400 : HourColors.primary300;
+
+    final bool isDailyOverLimit = todaySpending > dailyBudget;
+    final Color dailyProgressColor = isDailyOverLimit ? HourColors.primary400 : HourColors.primary300;
+
+    final double monthProgress = monthLimit == 0 ? 0 : (monthSpending / monthLimit).clamp(0.0, 1.0);
+    final double dailyProgress = todaySpending / (dailyBudget == 0 ? 1 : dailyBudget);
+
+    final int dailyRemaining = monthLimit - monthSpending;
+
+    final bool isOverLimit = dailyRemaining < 0;
+    final String remainingText = isOverLimit
+        ? '₩ ${NumberFormat("#,###").format(-dailyRemaining)}원 초과 했어요'
+        : '₩ ${NumberFormat("#,###").format(dailyRemaining)}원 더 쓸 수 있어요!';
 
     return Scaffold(
       appBar: PreferredSize(
@@ -127,21 +134,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            '이번달 쓴 금액',
-                            style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite
-                            )
+                          '이번달 쓴 금액',
+                          style: HourStyles.label1.copyWith(
+                              color: HourColors.staticWhite
+                          ),
                         ),
                         Text(
-                            '한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
-                            style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite
-                            )
+                          '한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
+                          style: HourStyles.label1.copyWith(
+                              color: HourColors.staticWhite
+                          ),
                         ),
                       ],
                     ),
                     const SizedBox(height: 8),
-                    Text('₩ ${NumberFormat('#,###').format(monthSpending)}',
+                    Text(
+                      '₩ ${NumberFormat('#,###').format(monthSpending)}',
                       style: HourStyles.title1.copyWith(
                           color: HourColors.staticWhite
                       ),
@@ -150,19 +158,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(7),
                       child: LinearProgressIndicator(
-                        value: monthProgress.clamp(0.0, 1.0),
+                        value: monthProgress,
                         backgroundColor: HourColors.gray600,
-                        valueColor: const AlwaysStoppedAnimation<Color>(
-                            HourColors.primary300
-                        ),
+                        valueColor: AlwaysStoppedAnimation<Color>(monthProgressColor),
                         minHeight: 8,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                        '₩ ${NumberFormat("#,###").format(dailyRemaining)}원 더 쓸 수 있어요!',
-                        style: HourStyles.label2.copyWith(
-                            color: HourColors.staticWhite)
+                      remainingText,
+                      style: HourStyles.label2.copyWith(
+                          color: HourColors.staticWhite
+                      ),
                     ),
                   ],
                 ),
@@ -170,9 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(
               height: 60,
-              child: DefaultAppbar(
-                  title: '오늘의 소비'
-              ),
+              child: DefaultAppbar(title: '오늘의 소비'),
             ),
             Container(
               decoration: BoxDecoration(
@@ -193,13 +198,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 8),
                   Row(
                     children: [
-                      Text('₩ ${NumberFormat("#,###").format(todaySpending)}',
-                          style: HourStyles.title1
-                              .copyWith(color: HourColors.staticWhite)),
+                      Text(
+                        '₩ ${NumberFormat("#,###").format(todaySpending)}',
+                        style: HourStyles.title1.copyWith(
+                            color: HourColors.staticWhite
+                        ),
+                      ),
                       const Spacer(),
-                      Text('₩ ${NumberFormat("#,###").format(dailyBudget)}',
-                          style: HourStyles.label0
-                              .copyWith(color: HourColors.staticWhite)),
+                      Text(
+                        '₩ ${NumberFormat("#,###").format(dailyBudget)}',
+                        style: HourStyles.label0.copyWith(
+                            color: HourColors.staticWhite
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -208,20 +219,22 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: LinearProgressIndicator(
                       value: dailyProgress.clamp(0.0, 1.0),
                       backgroundColor: HourColors.gray600,
-                      valueColor: const AlwaysStoppedAnimation<Color>(
-                          HourColors.primary300
-                      ),
+                      valueColor: AlwaysStoppedAnimation<Color>(dailyProgressColor),
                       minHeight: 8,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 8),
+                  Text(
+                    remainingText,
+                    style: HourStyles.label2.copyWith(color: HourColors.staticWhite),
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 20),
             Expanded(
-              child: histories.isEmpty ?
-              const Center(
+              child: histories.isEmpty
+                  ? const Center(
                 child: Text(
                   '기록이 없습니다.\n추가 버튼을 눌러 기록을 만들어보세요.',
                   textAlign: TextAlign.center,
@@ -250,9 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         context: context,
                         backgroundColor: HourColors.gray800,
                         shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20)
-                          ),
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
                         ),
                         isScrollControlled: true,
                         builder: (_) => HomeBottomSheet(

@@ -139,14 +139,12 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
 
     for (int i = 0; i < _titleControllers.length; i++) {
       final title = _titleControllers[i].text.trim();
-      // final amount = int.tryParse(_amountControllers[i].text.replaceAll(',', '')) ?? 0;
       final icon = _selectedIcons[i];
 
       if (title.isEmpty) continue;
 
       await widget.viewModel.addCategory(
         title: title,
-        // amount: amount,
         icon: icon,
         date: DateTime.now(),
       );
@@ -175,31 +173,6 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
               controller: _titleControllers[index],
             ),
             const SizedBox(height: 12),
-            // TextField(
-            //   controller: _amountControllers[index],
-            //   keyboardType: TextInputType.number,
-            //   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            //   decoration: InputDecoration(
-            //     prefixText: '₩ ',
-            //     prefixStyle: HourStyles.label1.copyWith(color: HourColors.staticWhite),
-            //     hintText: '금액을 입력해주세요',
-            //     hintStyle: HourStyles.label1.copyWith(color: HourColors.gray500),
-            //     border: InputBorder.none,
-            //   ),
-            //   style: HourStyles.body2.copyWith(color: HourColors.staticWhite),
-            //   onChanged: (value) {
-            //     final rawValue = value.replaceAll(',', '');
-            //     final int? intValue = int.tryParse(rawValue);
-            //     if (intValue == null) return;
-            //     final formatted = _formatter.format(intValue);
-            //     if (formatted != value) {
-            //       _amountControllers[index].value = TextEditingValue(
-            //         text: formatted,
-            //         selection: TextSelection.collapsed(offset: formatted.length),
-            //       );
-            //     }
-            //   },
-            // ),
             const SizedBox(height: 12),
             Text("아이콘을 선택해 주세요",
                 style: HourStyles.label1.copyWith(
@@ -212,7 +185,15 @@ class _SettingBottomSheetState extends State<SettingBottomSheet> {
               items: availableIcons.map((iconPath) {
                 return DropdownMenuItem(
                   value: iconPath,
-                  child: Image.asset(iconPath, width: 32, height: 32),
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      _selectedIcons[index] == iconPath
+                          ? HourColors.primary300
+                          : Colors.transparent,
+                      BlendMode.srcATop,
+                    ),
+                    child: Image.asset(iconPath, width: 32, height: 32),
+                  ),
                 );
               }).toList(),
               onChanged: (value) {
