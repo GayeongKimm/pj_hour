@@ -45,7 +45,6 @@ class CategoryViewmodel with ChangeNotifier {
 
   Future<void> addCategory({
     required String title,
-    // required int amount,
     required DateTime date,
     required String icon
   }) async {
@@ -65,7 +64,6 @@ class CategoryViewmodel with ChangeNotifier {
   Future<void> updateCategory({
     required int id,
     required String title,
-    // required int amount,
     required String icon
 
   }) async {

@@ -4,7 +4,7 @@ import 'package:hour/component/theme/color.dart';
 import 'package:hour/component/theme/style.dart';
 import 'package:hour/feature/category/item/category_item.dart';
 import 'package:hour/feature/history/viewmodel/history_viewmodel.dart';
-import 'package:hour/feature/history/item/history_spending_item.dart';
+import 'package:hour/feature/history/item/history_item.dart';
 import 'package:hour/feature/home/widget/home_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

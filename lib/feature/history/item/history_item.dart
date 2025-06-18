@@ -1,103 +1,133 @@
-// import 'package:flutter/material.dart';
-// import 'package:hour/component/theme/color.dart';
-// import 'package:hour/component/theme/style.dart';
-// import 'package:intl/intl.dart';
-//
-// import '../../home/item/home_item.dart';
-//
-// class HistoryItem extends StatelessWidget {
-//   final int? id;
-//   final String title;
-//   final HistoryType type;
-//   final int categoryId;
-//   final int price;
-//   final DateTime date;
-//   final Function() onTrashClick;
-//   final Function() onClickCreate;
-//
-//   const HistoryItem({
-//     super.key,
-//     this.id,
-//     required this.title,
-//     required this.type,
-//     required this.categoryId,
-//     required this.price,
-//     required this.date,
-//     required this.onTrashClick,
-//     required this.onClickCreate,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final formatter = NumberFormat('#,###');
-//     final formattedPrice = formatter.format(price);
-//     final formattedDate = DateFormat('yyyy.MM.dd').format(date);
-//
-//     return Container(
-//       margin: const EdgeInsets.only(bottom: 12),
-//       child: Material(
-//         color: HourColors.staticBlack,
-//         child: InkWell(
-//           onTap: onClickCreate,
-//           child: Padding(
-//             padding: const EdgeInsets.all(8.0),
-//             child: Row(
-//               children: [
-//                 Container(
-//                   width: 40,
-//                   height: 40,
-//                   decoration: BoxDecoration(
-//                     color: type == HistoryType.CONSUMPTION ? HourColors.orange500 : HourColors.primary400,
-//                     borderRadius: BorderRadius.circular(8),
-//                   ),
-//                   child: Center(
-//                     child: Text(
-//                       type == HistoryType.CONSUMPTION ? "지출" : "수입",
-//                       style: HourStyles.label2.copyWith(
-//                         color: HourColors.staticWhite,
-//                       ),
-//                     ),
-//                   ),
-//                 ),
-//                 const SizedBox(width: 12),
-//                 Expanded(
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Text(
-//                         title,
-//                         style: HourStyles.body1.copyWith(
-//                           color: HourColors.staticWhite,
-//                         ),
-//                       ),
-//                       const SizedBox(height: 4),
-//                       Text(
-//                         formattedDate,
-//                         style: HourStyles.label2.copyWith(
-//                           color: HourColors.gray500,
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//                 Text(
-//                   "${type == HistoryType.CONSUMPTION ? "-" : "+"}₩$formattedPrice",
-//                   style: HourStyles.body1.copyWith(
-//                     color: type == HistoryType.CONSUMPTION ? HourColors.orange500 : HourColors.primary400,
-//                   ),
-//                 ),
-//                 IconButton(
-//                   icon: const Icon(
-//                     Icons.delete_outline,
-//                     color: HourColors.gray500,
-//                   ),
-//                   onPressed: onTrashClick,
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
+import 'package:flutter/material.dart';
+import 'package:hour/component/theme/color.dart';
+import 'package:hour/component/theme/style.dart';
+import 'package:intl/intl.dart';
+
+class HistorySpendingCell extends StatelessWidget {
+  final String category;
+  final String title;
+  final String icon;
+  final int amount;
+  final VoidCallback onDelete;
+  final VoidCallback onEdit;
+
+  const HistorySpendingCell({
+    super.key,
+    required this.category,
+    required this.title,
+    required this.icon,
+    required this.amount,
+    required this.onDelete,
+    required this.onEdit,
+  });
+
+  static final _formatter = NumberFormat('#,###');
+
+  static bool _isAssetImage(String value) {
+    return value.endsWith('.png') ||
+        value.endsWith('.jpg') ||
+        value.endsWith('.jpeg') ||
+        value.startsWith('assets/');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: HourColors.darkBlack,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        children: [
+          if (_isAssetImage(icon))
+            Image.asset(
+              icon,
+              width: 36,
+              height: 36,
+              errorBuilder: (context, error, stackTrace) {
+                return const Icon(
+                    Icons.broken_image,
+                    size: 36,
+                    color: HourColors.gray500
+                );
+              },
+            )
+          else
+            const Icon(
+                Icons.category,
+                size: 36, color: HourColors.gray500
+            ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: HourStyles.label0.copyWith(
+                      color: HourColors.staticWhite
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  category,
+                  style: HourStyles.label2.copyWith(
+                      color: HourColors.staticWhite
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            "₩${_formatter.format(amount)}",
+            style: HourStyles.label1.copyWith(
+                color: HourColors.staticWhite
+            ),
+          ),
+          PopupMenuButton<String>(
+            tooltip: '더보기',
+            icon: Image.asset(
+              "assets/images/ic_more.png",
+              width: 20,
+              height: 20,
+              color: HourColors.gray500,
+            ),
+            color: HourColors.gray700,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            onSelected: (value) {
+              if (value == 'edit') {
+                onEdit();
+              } else if (value == 'delete') {
+                onDelete();
+              }
+            },
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: 'edit',
+                child: Text(
+                    '수정',
+                    style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite
+                    ),
+                ),
+              ),
+              PopupMenuItem(
+                value: 'delete',
+                child: Text(
+                    '삭제',
+                    style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite
+                    ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
