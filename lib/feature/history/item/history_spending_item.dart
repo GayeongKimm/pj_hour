@@ -65,14 +65,14 @@ class HistorySpendingCell extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  category,
+                  title,
                   style: HourStyles.label0.copyWith(
                       color: HourColors.staticWhite
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  title,
+                  category,
                   style: HourStyles.label2.copyWith(
                       color: HourColors.staticWhite
                   ),

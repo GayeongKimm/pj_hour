@@ -3,16 +3,19 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hour/local/database_manager.dart';
 import 'package:hour/local/entity/history_entity.dart';
+import 'package:provider/provider.dart';
 
+import '../../category/viewmodel/category_viewmodel.dart';
 import '../../home/item/home_item.dart';
 
 class HistoryViewmodel with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
   bool isEditing = false;
   HistoryEntity? selectedHistory;
 
-  List<HistoryEntity> _historyEntities = List.empty();
+  List<HistoryEntity> _historyEntities = [];
   List<HistoryEntity> get historyEntities => _historyEntities;
 
   StreamSubscription<List<HistoryEntity>>? _historyStreamSubscription;
@@ -29,7 +32,7 @@ class HistoryViewmodel with ChangeNotifier {
     notifyListeners();
   }
 
-  void getCategoryEntities() async {
+  void getHistoryEntities() async {
     final database = await DatabaseManager.getDatabase();
     _historyStreamSubscription =
         database.historyDao.findAllEntitiesWithStream().listen((data) {
@@ -38,30 +41,35 @@ class HistoryViewmodel with ChangeNotifier {
         });
   }
 
-  void removeEntity(int id) async {
+  Future<void> removeHistory(int id) async {
     final database = await DatabaseManager.getDatabase();
     await database.historyDao.deleteHistoryEntityById(id);
-    notifyListeners();
   }
 
-  Future<void> addCategory({
+  Future<void> addHistory({
+    required BuildContext context,
     required String title,
-    required int price,
-    required DateTime date,
     required HistoryType type,
     required int categoryId,
+    required int price,
+    required DateTime date,
   }) async {
     final database = await DatabaseManager.getDatabase();
 
     final newHistory = HistoryEntity(
       title: title,
-      price: price,
-      date: date,
       type: type,
       categoryId: categoryId,
+      price: price,
+      date: date,
     );
-
     await database.historyDao.insertHistoryEntity(newHistory);
+
+    if (type == HistoryType.CONSUMPTION) {
+      final categoryViewModel = context.read<CategoryViewmodel>();
+      categoryViewModel.increaseCategoryPrice(categoryId, price);
+    }
+
     notifyListeners();
   }
 

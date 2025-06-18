@@ -45,7 +45,7 @@ class CategoryViewmodel with ChangeNotifier {
 
   Future<void> addCategory({
     required String title,
-    required int amount,
+    // required int amount,
     required DateTime date,
     required String icon
   }) async {
@@ -53,7 +53,7 @@ class CategoryViewmodel with ChangeNotifier {
 
     final newCategory = CategoryEntity(
         title: title,
-        amount: amount,
+        amount: 0,
         date: date,
         icon: icon
     );
@@ -65,7 +65,7 @@ class CategoryViewmodel with ChangeNotifier {
   Future<void> updateCategory({
     required int id,
     required String title,
-    required int amount,
+    // required int amount,
     required String icon
 
   }) async {
@@ -74,9 +74,26 @@ class CategoryViewmodel with ChangeNotifier {
     final updatedCategory = CategoryEntity(
       id: id,
       title: title,
-      amount: amount,
+      amount: 0,
       icon: icon,
       date: DateTime.now(),
+    );
+
+    await database.categoryDao.updateCategoryEntity(updatedCategory);
+    notifyListeners();
+  }
+
+  void increaseCategoryPrice(int categoryId, int amount) async {
+    final database = await DatabaseManager.getDatabase();
+
+    final category = _categoryEntities.firstWhere((c) => c.id == categoryId);
+
+    final updatedCategory = CategoryEntity(
+      id: category.id,
+      title: category.title,
+      amount: category.amount + amount,
+      date: category.date,
+      icon: category.icon,
     );
 
     await database.categoryDao.updateCategoryEntity(updatedCategory);

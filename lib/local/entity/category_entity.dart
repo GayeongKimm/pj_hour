@@ -1,15 +1,12 @@
 import 'package:floor/floor.dart';
 
-@Entity(tableName: "category")
 class CategoryEntity {
 
   @PrimaryKey(autoGenerate: true)
   final int? id;
 
   final String title;
-
   final int amount;
-
   final DateTime date;
   final String icon;
 
@@ -22,23 +19,13 @@ class CategoryEntity {
   });
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-          other is CategoryEntity &&
-              runtimeType == other.runtimeType &&
-              id == other.id &&
-              title == other.title &&
-              amount == other.amount &&
-              date == other.date &&
-              icon == other.icon;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is CategoryEntity && other.id == id;
+  }
 
   @override
-  int get hashCode =>
-      id.hashCode ^
-      title.hashCode ^
-      amount.hashCode ^
-      date.hashCode ^
-      icon.hashCode;
+  int get hashCode => id.hashCode;
 
   @override
   String toString() {

@@ -66,19 +66,17 @@ class CategoryItem extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    if (amount > 0) ...[
-                      const SizedBox(width: 4),
-                      Text(
-                        amount.toString().replaceAllMapped(
-                          RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
-                              (m) => '${m[1]},',
-                        ),
-                        style: HourStyles.label2.copyWith(
-                          color: HourColors.staticWhite,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    const SizedBox(width: 4),
+                    Text(
+                      amount.toString().replaceAllMapped(
+                        RegExp(r'(\d)(?=(\d{3})+(?!\d))'),
+                            (m) => '${m[1]},',
                       ),
-                    ],
+                      style: HourStyles.label2.copyWith(
+                        color: HourColors.staticWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               ],

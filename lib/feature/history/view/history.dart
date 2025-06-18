@@ -26,7 +26,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     super.initState();
 
     final historyViewModel = context.read<HistoryViewmodel>();
-    historyViewModel.getCategoryEntities();
+    historyViewModel.getHistoryEntities();
   }
 
   @override

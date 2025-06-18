@@ -22,6 +22,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final historyViewModel = context.read<HistoryViewmodel>();
+      historyViewModel.getHistoryEntities();
+      final categoryViewModel = context.read<CategoryViewmodel>();
+      categoryViewModel.getCategoryEntities();
+    });
+  }
+
   void _showHomeBottomSheet(BuildContext context) {
     final viewModel = Provider.of<HistoryViewmodel>(context, listen: false);
     showModalBottomSheet(
@@ -113,12 +125,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('이번달 쓴 금액',
+                        Text(
+                            '이번달 쓴 금액',
                             style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite)),
-                        Text('한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
+                                color: HourColors.staticWhite
+                            )
+                        ),
+                        Text(
+                            '한도: ₩ ${NumberFormat("#,###").format(monthLimit)}',
                             style: HourStyles.label1.copyWith(
-                                color: HourColors.staticWhite)),
+                                color: HourColors.staticWhite
+                            )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -127,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: HourColors.staticWhite
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(7),
                       child: LinearProgressIndicator(
@@ -139,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         minHeight: 8,
                       ),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                         '₩ ${NumberFormat("#,###").format(dailyRemaining)}원 더 쓸 수 있어요!',
                         style: HourStyles.label2.copyWith(
@@ -183,22 +201,23 @@ class _HomeScreenState extends State<HomeScreen> {
                               .copyWith(color: HourColors.staticWhite)),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   ClipRRect(
                     borderRadius: BorderRadius.circular(7),
                     child: LinearProgressIndicator(
                       value: dailyProgress.clamp(0.0, 1.0),
                       backgroundColor: HourColors.gray600,
                       valueColor: const AlwaysStoppedAnimation<Color>(
-                          HourColors.primary300),
+                          HourColors.primary300
+                      ),
                       minHeight: 8,
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Expanded(
               child: histories.isEmpty ?
               const Center(
@@ -221,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     amount: history.price,
                     icon: category?.icon ?? 'assets/images/ic_default.png',
                     onDelete: () {
-                      historyViewModel.removeEntity(history.id!);
+                      historyViewModel.removeHistory(history.id!);
                     },
                     onEdit: () {
                       historyViewModel.setEditingHistory(history);

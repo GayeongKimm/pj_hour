@@ -102,13 +102,15 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
 
       if (title.isEmpty || price <= 0 || _selectedCategoryId == null) continue;
 
-      await widget.viewModel.addCategory(
+      await widget.viewModel.addHistory(
+        context: context,
         title: title,
         type: _selectedType,
         categoryId: _selectedCategoryId!,
         price: price,
         date: _selectedDate,
       );
+
       hasSaved = true;
     }
 
@@ -287,9 +289,11 @@ class _HomeBottomSheetState extends State<HomeBottomSheet> {
             );
           }).toList(),
           onChanged: (CategoryEntity? value) {
-            setState(() {
-              selectedCategory = value;
-              _selectedCategoryId = value?.id;
+            Future.microtask(() {
+              setState(() {
+                selectedCategory = value;
+                _selectedCategoryId = value?.id;
+              });
             });
           },
           dropdownColor: HourColors.staticBlack,
