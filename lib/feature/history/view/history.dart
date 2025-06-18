@@ -42,7 +42,8 @@ class _HistoryScreenState extends State<HistoryScreen> {
     history.date.year == selectedDate.year &&
         history.date.month == selectedDate.month &&
         history.date.day == selectedDate.day
-    ).toList();
+    ).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
 
     CategoryEntity? findCategoryById(int id) {
       final matches = categories.where((category) => category.id == id);
@@ -89,11 +90,12 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     final category = findCategoryById(history.categoryId);
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 16.0),
-                      child: HistorySpendingCell(
+                      child: HistoryItem(
                         category: category?.title ?? '알 수 없음',
                         title: history.title,
                         amount: history.price,
-                        icon: category?.icon ?? 'assets/images/ic_default.png',
+                        historyType: history.type,
+                        icon: category?.icon ?? 'assets/images/ic_clock.png',
                         onDelete: () { },
                         onEdit: () { },
                       ),

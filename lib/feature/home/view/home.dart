@@ -85,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
       return date.year == now.year &&
           date.month == now.month &&
           date.day == now.day;
-    }).toList();
+    }).toList()
+      ..sort((a, b) => b.date.compareTo(a.date));
 
     final todaySpending = histories
         .where((h) =>
@@ -234,11 +235,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   final history = todayHistories[index];
                   final category = findCategoryById(history.categoryId);
 
-                  return HistorySpendingCell(
+                  return HistoryItem(
                     category: category?.title ?? '알 수 없음',
                     title: history.title,
                     amount: history.price,
-                    icon: category?.icon ?? 'assets/images/ic_default.png',
+                    historyType: history.type,
+                    icon: category?.icon ?? 'assets/images/ic_clock.png',
                     onDelete: () {
                       historyViewModel.removeHistory(history.id!);
                     },
