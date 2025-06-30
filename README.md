@@ -1,16 +1,11 @@
-# hour
+## 배경 및 필요성
 
-flutter_project
+현대 사회에서 많은 사람들이 체계적인 관리 없이 소비하며, 저 또한 충동적인 지출이 많아 이를 해결할 방법에 대해 고민해 보았습니다.
 
-## Getting Started
+특히 ‘**디토세대’라고 불리는 젊은 층의 소비 습관을 개선할 수 있는 앱**이 필요하다고 생각했습니다. ‘디토세대’란 유행을 빠르게 따라가며, 남들이 소비하는 제품을 그대로 구매하는 경향이 강한 세대를 의미하는 신조어입니다. 
 
-This project is a starting point for a Flutter application.
+SNS와 쇼핑 플랫폼의 발전으로 인해 즉흥적이고 감성적인 소비가 증가하면서 체계적인 금융 관리의 필요성이 더욱 강조되고 있습니다.
 
-A few resources to get you started if this is your first Flutter project:
+이에 따라 **사용자가 자신의 재정을 쉽게 관리하고 소비 습관을 개선할 수 있도록 돕는 애플리케이션**이 필요하다고 생각했습니다.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+<img width="425" alt="스크린샷 2025-06-30 오후 11 35 33" src="https://github.com/user-attachments/assets/a0b322ad-8ad8-4b41-8835-15c8da0d28b3" />
